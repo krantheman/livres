@@ -14,3 +14,24 @@ class Book(db.Model):
     text_reviews_count = db.Column(db.String(10))
     publication_date = db.Column(db.String(15))
     publisher = db.Column(db.String(50))
+    stock = db.Column(db.Integer, default=1)
+    transactions = db.relationship('Transaction', backref='book', lazy=True)
+
+
+class Member(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    phone_no = db.Column(db.Integer, unique=True, nullable=False)
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    address = db.Column(db.String(100), nullable=False)
+    transactions = db.relationship('Transaction', backref='member', lazy=True)
+
+
+class Transaction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    borrowDate = db.Column(db.DateTime, nullable=False)
+    returnDate = db.Column(db.DateTime)
+    book_id = db.Column(db.String(10), db.ForeignKey(
+        'book.bookID'), nullable=False)
+    member_id = db.Column(db.Integer, db.ForeignKey(
+        'member.id'), nullable=False)
