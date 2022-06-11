@@ -11,7 +11,9 @@ def create_app():
 
     db.init_app(app)
 
-    from .views import books_blueprint
-    app.register_blueprint(books_blueprint)
+    from .views import book_blueprint, member_blueprint, transaction_blueprint
+    app.register_blueprint(book_blueprint)
+    app.register_blueprint(member_blueprint)
+    app.register_blueprint(transaction_blueprint)
 
     return app

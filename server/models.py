@@ -1,4 +1,5 @@
 from . import db
+from datetime import datetime
 
 
 class Book(db.Model):
@@ -29,7 +30,7 @@ class Member(db.Model):
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    borrowDate = db.Column(db.DateTime, nullable=False)
+    borrowDate = db.Column(db.DateTime, nullable=False, default=datetime.now())
     returnDate = db.Column(db.DateTime)
     book_id = db.Column(db.String(10), db.ForeignKey(
         'book.bookID'), nullable=False)
