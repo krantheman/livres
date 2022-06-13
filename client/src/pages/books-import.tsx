@@ -1,6 +1,8 @@
 import {
+  Box,
   Button,
   InputAdornment,
+  Pagination,
   Stack,
   TextField,
   Typography,
@@ -11,7 +13,7 @@ import { useState, useEffect, ChangeEvent } from "react";
 import { Book } from "../types";
 import BookCard from "../components/BookCard";
 
-const Books = () => {
+const BooksImport = () => {
   const [books, setBooks] = useState<Book[]>([]);
 
   const [search, setSearch] = useState("");
@@ -19,24 +21,37 @@ const Books = () => {
     setSearch(event.currentTarget.value);
   };
 
-  useEffect(() => {
-    fetch("/books").then((res) =>
-      res.json().then((data) => {
-        setBooks(data.books);
-      })
-    );
-  }, []);
+  const [page, setPage] = useState(1);
+  const handlePage = (event: ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
 
-  console.log(books);
+  useEffect(() => {
+    fetch(
+      `https://frappe.io/api/method/frappe-library?page=${page}&title=${search}&authors=${search}&isbn=${search}&publisher=${search}`
+    )
+      .then((res) =>
+        res.json().then((data) => {
+          let bookData = data.message;
+          bookData.map((book: any) => {
+            book.num_pages = book["  num_pages"];
+            delete book["  num_pages"];
+          });
+          setBooks(bookData);
+        })
+      )
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [search, page]);
 
   return (
     <Stack my={4}>
       <Stack direction="row" alignItems="center" mb={3}>
         <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-          Library Inventory
+          Import New Books
         </Typography>
         <Button
-          href="books/import"
           variant="contained"
           endIcon={<DownloadIcon />}
           sx={{ ml: "auto" }}
@@ -47,7 +62,7 @@ const Books = () => {
       <TextField
         onChange={handleSearch}
         id="book-search"
-        label="Search for a book or an author"
+        label="Search for a book, author, isbn code or publisher"
         variant="outlined"
         sx={{ mb: 3 }}
         InputProps={{
@@ -67,8 +82,14 @@ const Books = () => {
         .map((book) => (
           <BookCard key={book.bookID} book={book} />
         ))}
+      <Pagination
+        count={200}
+        onChange={handlePage}
+        color="primary"
+        sx={{ mx: "auto", mt: 2 }}
+      />
     </Stack>
   );
 };
 
-export default Books;
+export default BooksImport;

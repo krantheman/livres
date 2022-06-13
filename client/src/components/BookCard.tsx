@@ -1,7 +1,7 @@
 import { Badge, Box, Paper, Rating, Stack, Typography } from "@mui/material";
 import { FC } from "react";
 import { Book } from "../types";
-import bookImg from "../assets/book3.png";
+import bookImg from "../assets/book2.png";
 import ArticleIcon from "@mui/icons-material/Article";
 import LanguageIcon from "@mui/icons-material/Language";
 import CorporateFareIcon from "@mui/icons-material/CorporateFare";
