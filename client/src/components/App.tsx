@@ -18,9 +18,9 @@ const theme = createTheme({
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <Container maxWidth="xl">
+      <Container>
         <NavBar />
-        {/* <Books /> */}
+        <Books />
       </Container>
     </ThemeProvider>
   );
