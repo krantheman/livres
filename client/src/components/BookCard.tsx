@@ -1,20 +1,22 @@
-import { Badge, Box, Paper, Rating, Stack, Typography } from "@mui/material";
-import { FC } from "react";
-import { Book } from "../types";
-import bookImg from "../assets/book2.png";
+import AddIcon from "@mui/icons-material/Add";
 import ArticleIcon from "@mui/icons-material/Article";
-import LanguageIcon from "@mui/icons-material/Language";
-import CorporateFareIcon from "@mui/icons-material/CorporateFare";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import CorporateFareIcon from "@mui/icons-material/CorporateFare";
 import InventoryIcon from "@mui/icons-material/Inventory";
+import LanguageIcon from "@mui/icons-material/Language";
+import { Box, Button, Paper, Rating, Stack, Typography } from "@mui/material";
+import { FC } from "react";
+import bookImg from "../assets/book3.png";
+import { Book } from "../types";
 
 type Props = {
   book: Book;
+  forImport?: boolean;
 };
 
-const BookCard: FC<Props> = ({ book }) => {
+const BookCard: FC<Props> = ({ book, forImport }) => {
   return (
-    <Paper elevation={0} sx={{ px: 3, py: 2 }}>
+    <Paper elevation={0} sx={{ px: 4, py: 3 }}>
       <Stack direction="row" spacing={3}>
         <img src={bookImg} />
         <Stack py={1} width="70%">
@@ -25,7 +27,7 @@ const BookCard: FC<Props> = ({ book }) => {
           <Rating
             name="read-only"
             value={parseFloat(book.average_rating)}
-            precision={0.1}
+            precision={0.25}
             readOnly
           />
           <Stack direction="row" mt={1} spacing={1} alignItems="center">
@@ -49,12 +51,18 @@ const BookCard: FC<Props> = ({ book }) => {
           </Stack>
         </Stack>
         <Box pt={1}>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <InventoryIcon fontSize="large" color="info" />
-            <Typography sx={{ color: "gray", fontWeight: "bold" }}>
-              {book.stock === 1 ? "1 book" : `${book.stock} books`}
-            </Typography>
-          </Stack>
+          {forImport ? (
+            <Button variant="outlined" endIcon={<AddIcon />}>
+              <b>Import</b>
+            </Button>
+          ) : (
+            <Stack direction="row" spacing={1} alignItems="center">
+              <InventoryIcon fontSize="large" color="info" />
+              <Typography sx={{ color: "gray", fontWeight: "bold" }}>
+                {book.stock === 1 ? "1 book" : `${book.stock} books`}
+              </Typography>
+            </Stack>
+          )}
         </Box>
       </Stack>
     </Paper>

@@ -5,10 +5,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import DownloadIcon from "@mui/icons-material/Download";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState, useEffect, ChangeEvent } from "react";
 import { Book } from "../types";
+import ImportExportIcon from "@mui/icons-material/ImportExport";
 import BookCard from "../components/BookCard";
 
 const Books = () => {
@@ -38,10 +38,11 @@ const Books = () => {
         <Button
           href="books/import"
           variant="contained"
-          endIcon={<DownloadIcon />}
-          sx={{ ml: "auto" }}
+          endIcon={<ImportExportIcon />}
+          disableElevation
+          sx={{ ml: "auto", py: 1 }}
         >
-          Import Books
+          <b>Import Books</b>
         </Button>
       </Stack>
       <TextField

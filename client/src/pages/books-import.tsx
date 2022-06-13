@@ -1,17 +1,14 @@
+import SearchIcon from "@mui/icons-material/Search";
 import {
-  Box,
-  Button,
   InputAdornment,
   Pagination,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import DownloadIcon from "@mui/icons-material/Download";
-import SearchIcon from "@mui/icons-material/Search";
-import { useState, useEffect, ChangeEvent } from "react";
-import { Book } from "../types";
+import { ChangeEvent, useEffect, useState } from "react";
 import BookCard from "../components/BookCard";
+import { Book } from "../types";
 
 const BooksImport = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -24,11 +21,13 @@ const BooksImport = () => {
   const [page, setPage] = useState(1);
   const handlePage = (event: ChangeEvent<unknown>, value: number) => {
     setPage(value);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
+    console.log(search);
     fetch(
-      `https://frappe.io/api/method/frappe-library?page=${page}&title=${search}&authors=${search}&isbn=${search}&publisher=${search}`
+      `https://frappe.io/api/method/frappe-library?page=${page.toString()}&title=${search}&authors=${search}&isbn=${search}&publisher=${search}`
     )
       .then((res) =>
         res.json().then((data) => {
@@ -46,19 +45,10 @@ const BooksImport = () => {
   }, [search, page]);
 
   return (
-    <Stack my={4}>
-      <Stack direction="row" alignItems="center" mb={3}>
-        <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-          Import New Books
-        </Typography>
-        <Button
-          variant="contained"
-          endIcon={<DownloadIcon />}
-          sx={{ ml: "auto" }}
-        >
-          Import Books
-        </Button>
-      </Stack>
+    <Stack py={4}>
+      <Typography variant="h4" sx={{ fontWeight: "bold", mb: 3 }}>
+        Import New Books
+      </Typography>
       <TextField
         onChange={handleSearch}
         id="book-search"
@@ -73,15 +63,9 @@ const BooksImport = () => {
           ),
         }}
       />
-      {books
-        .filter(
-          (book) =>
-            book.title.toLowerCase().includes(search.toLowerCase()) ||
-            book.authors.toLowerCase().includes(search.toLowerCase())
-        )
-        .map((book) => (
-          <BookCard key={book.bookID} book={book} />
-        ))}
+      {books.map((book, id) => (
+        <BookCard key={id} book={book} forImport />
+      ))}
       <Pagination
         count={200}
         onChange={handlePage}
