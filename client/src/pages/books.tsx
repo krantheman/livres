@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   Button,
   InputAdornment,
@@ -36,7 +37,8 @@ const Books = () => {
           Library Inventory
         </Typography>
         <Button
-          href="books/import"
+          component={Link}
+          to="import"
           variant="contained"
           endIcon={<ImportExportIcon />}
           disableElevation

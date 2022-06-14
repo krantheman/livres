@@ -1,4 +1,5 @@
 import { AppBar, Box, Button, Container, Stack, Toolbar } from "@mui/material";
+import { Link } from "react-router-dom";
 import { FC } from "react";
 import logo from "../assets/logo.svg";
 
@@ -16,13 +17,17 @@ const NavBar: FC = () => {
           <Toolbar>
             <img src={logo} alt="logo" height={46} />
             <Stack direction="row" spacing={3} alignItems="center" ml="auto">
-              <Button href="books" sx={{ fontWeight: "bold" }}>
+              <Button component={Link} to="books" sx={{ fontWeight: "bold" }}>
                 BOOKS
               </Button>
-              <Button href="members" sx={{ fontWeight: "bold" }}>
+              <Button component={Link} to="members" sx={{ fontWeight: "bold" }}>
                 MEMBERS
               </Button>
-              <Button href="transactions" sx={{ fontWeight: "bold" }}>
+              <Button
+                component={Link}
+                to="transactions"
+                sx={{ fontWeight: "bold" }}
+              >
                 TRANSACTIONS
               </Button>
             </Stack>

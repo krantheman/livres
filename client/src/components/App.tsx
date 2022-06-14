@@ -1,6 +1,8 @@
 import { Box, Container } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { SnackbarContextProvider } from "../contexts/SnackbarContext";
+import Books from "../pages/books";
 import BooksImport from "../pages/books-import";
 import NavBar from "./NavBar";
 import Toast from "./Toast";
@@ -23,18 +25,20 @@ const theme = createTheme({
 
 const App = () => {
   return (
-    <SnackbarContextProvider>
-      <ThemeProvider theme={theme}>
-        <Box sx={{ bgcolor: "white" }}>
+    <BrowserRouter>
+      <SnackbarContextProvider>
+        <ThemeProvider theme={theme}>
           <NavBar />
           <Container>
-            {/* <Books /> */}
-            <BooksImport />
+            <Routes>
+              <Route path="/books" element={<Books />} />
+              <Route path="/books/import" element={<BooksImport />} />
+            </Routes>
           </Container>
           <Toast />
-        </Box>
-      </ThemeProvider>
-    </SnackbarContextProvider>
+        </ThemeProvider>
+      </SnackbarContextProvider>
+    </BrowserRouter>
   );
 };
 
