@@ -1,4 +1,4 @@
-import { Alert, Divider, Slide, Snackbar, Typography } from "@mui/material";
+import { Divider, Slide, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -13,10 +13,10 @@ import {
   forwardRef,
   ReactElement,
   Ref,
-  SyntheticEvent,
   useEffect,
   useState,
 } from "react";
+import { useSnackbar } from "../contexts/SnackbarContext";
 import { Book } from "../types";
 
 const Transition = forwardRef(function Transition(
@@ -62,6 +62,8 @@ export const FormDialog: FC<Props> = ({ book, open, handleOpen }) => {
     }
   };
 
+  const snackbar = useSnackbar();
+
   const handleImport = () => {
     if (existingBook) {
       fetch(`/book/${existingBook.bookID}/stock`, {
@@ -72,11 +74,14 @@ export const FormDialog: FC<Props> = ({ book, open, handleOpen }) => {
         body: JSON.stringify({ stock: existingBook.stock + number }),
       })
         .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
+        .then(() => {
+          snackbar.makeMessage("Books imported successfully!");
+          snackbar.makeOpen(true);
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
+          snackbar.makeMessage("Some error occurred while importing.");
+          snackbar.makeSeverity("error");
+          snackbar.makeOpen(true);
         });
     } else {
       fetch("/book", {
@@ -87,11 +92,14 @@ export const FormDialog: FC<Props> = ({ book, open, handleOpen }) => {
         body: JSON.stringify({ ...book, stock: number }),
       })
         .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
+        .then(() => {
+          snackbar.makeMessage("Books imported successfully!");
+          snackbar.makeOpen(true);
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
+          snackbar.makeMessage("Some error occurred while importing.");
+          snackbar.makeSeverity("error");
+          snackbar.makeOpen(true);
         });
     }
     handleOpen();

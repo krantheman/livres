@@ -1,9 +1,9 @@
-import Books from "../pages/books";
-import Home from "../pages/home";
-import NavBar from "./NavBar";
+import { Box, Container } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Alert, Box, Container, Snackbar } from "@mui/material";
+import { SnackbarContextProvider } from "../contexts/SnackbarContext";
 import BooksImport from "../pages/books-import";
+import NavBar from "./NavBar";
+import Toast from "./Toast";
 
 const theme = createTheme({
   // palette: {
@@ -23,15 +23,18 @@ const theme = createTheme({
 
 const App = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ bgcolor: "white" }}>
-        <NavBar />
-        <Container>
-          {/* <Books /> */}
-          <BooksImport />
-        </Container>
-      </Box>
-    </ThemeProvider>
+    <SnackbarContextProvider>
+      <ThemeProvider theme={theme}>
+        <Box sx={{ bgcolor: "white" }}>
+          <NavBar />
+          <Container>
+            {/* <Books /> */}
+            <BooksImport />
+          </Container>
+          <Toast />
+        </Box>
+      </ThemeProvider>
+    </SnackbarContextProvider>
   );
 };
 
