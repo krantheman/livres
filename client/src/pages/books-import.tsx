@@ -25,7 +25,6 @@ const BooksImport = () => {
   };
 
   useEffect(() => {
-    console.log(search);
     fetch(
       `https://frappe.io/api/method/frappe-library?page=${page.toString()}&title=${search}&authors=${search}&isbn=${search}&publisher=${search}`
     )

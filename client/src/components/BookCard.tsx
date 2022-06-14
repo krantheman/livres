@@ -5,9 +5,10 @@ import CorporateFareIcon from "@mui/icons-material/CorporateFare";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import LanguageIcon from "@mui/icons-material/Language";
 import { Box, Button, Paper, Rating, Stack, Typography } from "@mui/material";
-import { FC } from "react";
+import { FC, useState } from "react";
 import bookImg from "../assets/book3.png";
 import { Book } from "../types";
+import { FormDialog } from "./FormDialog";
 
 type Props = {
   book: Book;
@@ -15,10 +16,15 @@ type Props = {
 };
 
 const BookCard: FC<Props> = ({ book, forImport }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const handleDialogOpen = () => {
+    setDialogOpen(!dialogOpen);
+  };
+
   return (
     <Paper elevation={0} sx={{ px: 4, py: 3 }}>
       <Stack direction="row" spacing={3}>
-        <img src={bookImg} />
+        <img src={bookImg} alt="Book" />
         <Stack py={1} width="70%">
           <Typography variant="h6" sx={{ fontWeight: "bold" }} noWrap>
             {book.title}
@@ -31,20 +37,20 @@ const BookCard: FC<Props> = ({ book, forImport }) => {
             readOnly
           />
           <Stack direction="row" mt={1} spacing={1} alignItems="center">
-            <ArticleIcon color="info" />
+            <ArticleIcon color="primary" />
             <Typography sx={{ color: "gray" }}>
               {book.num_pages} pages
             </Typography>
-            <LanguageIcon color="info" />
+            <LanguageIcon color="primary" />
             <Typography sx={{ color: "gray" }}>
               {book.language_code[0].toUpperCase() +
                 book.language_code.slice(1)}
             </Typography>
-            <CalendarMonthIcon color="info" />
+            <CalendarMonthIcon color="primary" />
             <Typography sx={{ color: "gray" }}>
               {book.publication_date}
             </Typography>
-            <CorporateFareIcon color="info" />
+            <CorporateFareIcon color="primary" />
             <Typography sx={{ color: "gray" }} noWrap>
               {book.publisher}
             </Typography>
@@ -52,7 +58,11 @@ const BookCard: FC<Props> = ({ book, forImport }) => {
         </Stack>
         <Box pt={1}>
           {forImport ? (
-            <Button variant="outlined" endIcon={<AddIcon />}>
+            <Button
+              variant="outlined"
+              endIcon={<AddIcon />}
+              onClick={handleDialogOpen}
+            >
               <b>Import</b>
             </Button>
           ) : (
@@ -65,6 +75,13 @@ const BookCard: FC<Props> = ({ book, forImport }) => {
           )}
         </Box>
       </Stack>
+      {dialogOpen && (
+        <FormDialog
+          book={book}
+          open={dialogOpen}
+          handleOpen={handleDialogOpen}
+        />
+      )}
     </Paper>
   );
 };

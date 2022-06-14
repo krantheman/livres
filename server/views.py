@@ -15,6 +15,16 @@ def add_book():
     return book_data, 201
 
 
+@book_blueprint.route("/book/<id>")
+def get_book(id):
+    book = Book.query.get(id)
+    if not book:
+        return jsonify({"message": "Book not found"})
+    book_as_dict = book.__dict__
+    del book_as_dict["_sa_instance_state"]
+    return jsonify({"book": book_as_dict})
+
+
 @book_blueprint.route("/books")
 def get_books():
     books = []
