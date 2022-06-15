@@ -1,16 +1,8 @@
-import { Link } from "react-router-dom";
-import {
-  Button,
-  InputAdornment,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import { useState, useEffect, ChangeEvent } from "react";
-import { Book } from "../types";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
+import { ChangeEvent, useEffect, useState } from "react";
 import BookCard from "../components/BookCard";
+import PageLayout from "../components/PageLayout";
+import { Book } from "../types";
 
 const Books = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -28,39 +20,14 @@ const Books = () => {
     );
   }, []);
 
-  console.log(books);
-
   return (
-    <Stack my={4}>
-      <Stack direction="row" alignItems="center" mb={3}>
-        <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-          Library Inventory
-        </Typography>
-        <Button
-          component={Link}
-          to="import"
-          variant="contained"
-          endIcon={<ImportExportIcon />}
-          disableElevation
-          sx={{ ml: "auto", py: 1 }}
-        >
-          <b>Import Books</b>
-        </Button>
-      </Stack>
-      <TextField
-        onChange={handleSearch}
-        id="book-search"
-        label="Search for a book or an author"
-        variant="outlined"
-        sx={{ mb: 3 }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-      />
+    <PageLayout
+      header="Library Inventory"
+      buttonText="Import Books"
+      buttonIcon={<ImportExportIcon />}
+      searchLabel="Search for a book or an author"
+      handleSearch={handleSearch}
+    >
       {books
         .filter(
           (book) =>
@@ -70,7 +37,7 @@ const Books = () => {
         .map((book) => (
           <BookCard key={book.bookID} book={book} />
         ))}
-    </Stack>
+    </PageLayout>
   );
 };
 

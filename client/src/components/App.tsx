@@ -1,9 +1,10 @@
-import { Box, Container } from "@mui/material";
+import { Container } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { SnackbarContextProvider } from "../contexts/SnackbarContext";
 import Books from "../pages/books";
 import BooksImport from "../pages/books-import";
+import Members from "../pages/members";
 import NavBar from "./NavBar";
 import Toast from "./Toast";
 
@@ -33,6 +34,7 @@ const App = () => {
             <Routes>
               <Route path="/books" element={<Books />} />
               <Route path="/books/import" element={<BooksImport />} />
+              <Route path="/members" element={<Members />} />
             </Routes>
           </Container>
           <Toast />

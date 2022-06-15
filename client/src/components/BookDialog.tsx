@@ -34,18 +34,22 @@ type Props = {
   handleOpen: () => void;
 };
 
-export const FormDialog: FC<Props> = ({ book, open, handleOpen }) => {
+export const BookDialog: FC<Props> = ({ book, open, handleOpen }) => {
   const [existingBook, setExistingBook] = useState<Book>();
+  const [stock, setStock] = useState(0);
 
   useEffect(() => {
     fetch(`/book/${book.bookID}`).then((res) =>
       res.json().then((data) => {
-        if (data.book) setExistingBook(data.book);
+        if (data.book) {
+          setExistingBook(data.book);
+          setStock(data.book.stock);
+        }
       })
     );
-  }, []);
+  }, [book]);
 
-  const [min, max] = [1, 50];
+  const [min, max] = [1, 50 - stock];
   const [number, setNumber] = useState(1);
   const handleNumberInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === "") {

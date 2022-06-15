@@ -8,7 +8,7 @@ import { Box, Button, Paper, Rating, Stack, Typography } from "@mui/material";
 import { FC, useState } from "react";
 import bookImg from "../assets/book3.png";
 import { Book } from "../types";
-import { FormDialog } from "./FormDialog";
+import { BookDialog } from "./BookDialog";
 
 type Props = {
   book: Book;
@@ -76,7 +76,7 @@ const BookCard: FC<Props> = ({ book, forImport }) => {
         </Box>
       </Stack>
       {dialogOpen && (
-        <FormDialog
+        <BookDialog
           book={book}
           open={dialogOpen}
           handleOpen={handleDialogOpen}

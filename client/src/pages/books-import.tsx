@@ -1,13 +1,7 @@
-import SearchIcon from "@mui/icons-material/Search";
-import {
-  InputAdornment,
-  Pagination,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Pagination } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import BookCard from "../components/BookCard";
+import PageLayout from "../components/PageLayout";
 import { Book } from "../types";
 
 const BooksImport = () => {
@@ -31,7 +25,7 @@ const BooksImport = () => {
       .then((res) =>
         res.json().then((data) => {
           let bookData = data.message;
-          bookData.map((book: any) => {
+          bookData.forEach((book: any) => {
             book.num_pages = book["  num_pages"];
             delete book["  num_pages"];
           });
@@ -44,24 +38,11 @@ const BooksImport = () => {
   }, [search, page]);
 
   return (
-    <Stack py={4}>
-      <Typography variant="h4" sx={{ fontWeight: "bold", mb: 3 }}>
-        Import New Books
-      </Typography>
-      <TextField
-        onChange={handleSearch}
-        id="book-search"
-        label="Search for a book, author, isbn code or publisher"
-        variant="outlined"
-        sx={{ mb: 3 }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-      />
+    <PageLayout
+      header="Import New Books"
+      searchLabel="Search for a book, author, isbn code or publisher"
+      handleSearch={handleSearch}
+    >
       {books.map((book, id) => (
         <BookCard key={id} book={book} forImport />
       ))}
@@ -71,7 +52,7 @@ const BooksImport = () => {
         color="primary"
         sx={{ mx: "auto", mt: 2 }}
       />
-    </Stack>
+    </PageLayout>
   );
 };
 

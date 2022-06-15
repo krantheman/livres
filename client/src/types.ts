@@ -13,3 +13,10 @@ export type Book = {
   publisher: string;
   stock: number;
 };
+
+export type Member = {
+  name: string;
+  phone_no: number;
+  email: string;
+  address: string;
+};
