@@ -27,6 +27,7 @@ const Books = () => {
       buttonIcon={<ImportExportIcon />}
       searchLabel="Search for a book or an author"
       handleSearch={handleSearch}
+      page="books"
     >
       {books
         .filter(

@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from sqlalchemy import or_
 from . import db
 from .models import Book, Member, Transaction
 
@@ -77,6 +78,19 @@ def get_members():
         del member_as_dict["_sa_instance_state"]
         members.append(member_as_dict)
     return jsonify({"members": members})
+
+
+@member_blueprint.route("/member")
+def get_member():
+    if not request.args:
+        return "No member data provided", 400
+    member = Member.query.filter(
+        or_(Member.email == request.args.get("email"), Member.phone_no == request.args.get("phone_no"))).first()
+    if member:
+        member_as_dict = member.__dict__
+        del member_as_dict["_sa_instance_state"]
+        return jsonify({"member": member_as_dict})
+    return jsonify({"message": "Member does not exist"})
 
 
 @member_blueprint.route("/member/<id>", methods=["PUT"])

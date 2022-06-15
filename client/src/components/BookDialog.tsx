@@ -154,7 +154,6 @@ export const BookDialog: FC<Props> = ({ book, open, handleOpen }) => {
           margin="dense"
           id="number"
           type="number"
-          variant="outlined"
           InputProps={{ inputProps: { min, max } }}
           value={number}
           onChange={handleNumberInputChange}

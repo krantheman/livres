@@ -1,14 +1,15 @@
-import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Button,
+  ButtonProps,
   InputAdornment,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, FC, ReactElement, ReactNode } from "react";
+import { ChangeEvent, FC, ReactElement, ReactNode, useState } from "react";
 import { Link } from "react-router-dom";
+import { MemberDialog } from "./MemberDialog";
 
 type Props = {
   header: string;
@@ -17,6 +18,7 @@ type Props = {
   searchLabel: string;
   handleSearch: (event: ChangeEvent<HTMLInputElement>) => void;
   children: ReactNode;
+  page?: "books" | "members";
 };
 
 const PageLayout: FC<Props> = ({
@@ -26,22 +28,33 @@ const PageLayout: FC<Props> = ({
   searchLabel,
   handleSearch,
   children,
+  page,
 }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const handleDialogOpen = () => {
+    setDialogOpen(!dialogOpen);
+  };
+
+  const buttonProps: any = {
+    variant: "contained",
+    endIcon: buttonIcon,
+    disableElevation: true,
+    sx: { ml: "auto", py: 1 },
+  };
+
   return (
     <Stack my={4}>
       <Stack direction="row" alignItems="center" mb={3}>
         <Typography variant="h4" sx={{ fontWeight: "bold" }}>
           {header}
         </Typography>
-        {buttonText && (
-          <Button
-            variant="contained"
-            component={Link}
-            to="import"
-            endIcon={buttonIcon}
-            disableElevation
-            sx={{ ml: "auto", py: 1 }}
-          >
+        {page === "books" && (
+          <Button component={Link} to="import" {...buttonProps}>
+            <b>{buttonText}</b>
+          </Button>
+        )}
+        {page === "members" && (
+          <Button onClick={handleDialogOpen} {...buttonProps}>
             <b>{buttonText}</b>
           </Button>
         )}
@@ -61,6 +74,9 @@ const PageLayout: FC<Props> = ({
         }}
       />
       {children}
+      {dialogOpen && (
+        <MemberDialog open={dialogOpen} handleOpen={handleDialogOpen} />
+      )}
     </Stack>
   );
 };

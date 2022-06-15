@@ -36,8 +36,8 @@ const Members = () => {
 
   const columns: GridColDef[] = [
     { field: "name", headerName: "Name", flex: 1 },
-    { field: "phone_no", headerName: "Phone number", flex: 1 },
     { field: "email", headerName: "Email ID", flex: 1 },
+    { field: "phone_no", headerName: "Phone number", flex: 1 },
     { field: "address", headerName: "Address", flex: 1 },
   ];
 
@@ -46,14 +46,16 @@ const Members = () => {
       header="Library Members"
       buttonText="Add Members"
       buttonIcon={<PersonAddAltRoundedIcon />}
-      searchLabel="Search for a member by name, phone number or email"
+      searchLabel="Search for a member by name, phone number or email ID"
       handleSearch={handleSearch}
+      page="members"
     >
       <Box sx={{ height: 650, mt: 1 }}>
         <DataGrid
           rows={rows}
           columns={columns}
           pageSize={10}
+          rowsPerPageOptions={[10]}
           disableSelectionOnClick
           disableColumnMenu
           autoHeight
