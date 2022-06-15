@@ -1,7 +1,6 @@
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Button,
-  ButtonProps,
   InputAdornment,
   Stack,
   TextField,

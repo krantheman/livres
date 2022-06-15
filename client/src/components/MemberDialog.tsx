@@ -15,6 +15,7 @@ import {
   useState,
 } from "react";
 import { useSnackbar } from "../contexts/SnackbarContext";
+import { Member } from "../types";
 
 const Transition = forwardRef(function Transition(
   transitionProps: TransitionProps & {
@@ -28,28 +29,31 @@ const Transition = forwardRef(function Transition(
 type Props = {
   open: boolean;
   handleOpen: () => void;
+  member?: Member;
 };
 
-export const MemberDialog: FC<Props> = ({ open, handleOpen }) => {
-  const [name, setName] = useState("");
+export const MemberDialog: FC<Props> = ({ open, handleOpen, member }) => {
+  const [name, setName] = useState(member ? member.name : "");
   const [nameError, setNameError] = useState("");
   const handleName = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(member ? member.email : "");
   const [emailError, setEmailError] = useState("");
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
-  const [phoneNo, setPhoneNo] = useState("");
+  const [phoneNo, setPhoneNo] = useState(
+    member ? member.phone_no.toString() : ""
+  );
   const [phoneNoError, setPhoneNoError] = useState("");
   const handlePhoneNo = (e: ChangeEvent<HTMLInputElement>) => {
     setPhoneNo(e.target.value);
   };
 
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState(member ? member.address : "");
   const [addressError, setAddressError] = useState("");
   const handleAddress = (e: ChangeEvent<HTMLInputElement>) => {
     setAddress(e.target.value);
@@ -66,7 +70,34 @@ export const MemberDialog: FC<Props> = ({ open, handleOpen }) => {
     else if (!email.trim()) setEmailError("Enter valid email ID.");
     else if (!phoneNo.trim()) setPhoneNoError("Enter valid phone number.");
     else if (!address.trim()) setAddressError("Enter valid address.");
-    else
+    // For editing member details
+    else if (member) {
+      fetch(`/member/${member.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          address,
+        }),
+      })
+        .then((res) =>
+          res.json().then(() => {
+            snackbar.makeSeverity("success");
+            snackbar.makeMessage("Member details edited successfully!");
+            snackbar.makeOpen(true);
+            handleOpen();
+          })
+        )
+        .catch((err) => {
+          snackbar.makeMessage("Some error occurred while updating details.");
+          snackbar.makeSeverity("error");
+          snackbar.makeOpen(true);
+          console.log(err);
+        });
+      // For adding new member
+    } else
       await fetch(`/member?email=${email}&phone_no=${phoneNo}`)
         .then((res) =>
           res.json().then((data) => {
@@ -122,12 +153,13 @@ export const MemberDialog: FC<Props> = ({ open, handleOpen }) => {
       TransitionComponent={Transition}
       fullWidth
     >
-      <DialogTitle sx={{ px: 6, pt: 4 }}>
-        <b>Add New Member</b>
+      <DialogTitle sx={{ px: 4, pt: 4 }}>
+        <b>{member ? "Edit Member Details" : "Add New Member"}</b>
       </DialogTitle>
-      <DialogContent sx={{ px: 6 }}>
+      <DialogContent sx={{ px: 4 }}>
         <TextField
           autoFocus
+          value={name}
           label="Name"
           margin="dense"
           id="name"
@@ -138,28 +170,33 @@ export const MemberDialog: FC<Props> = ({ open, handleOpen }) => {
           sx={{ mb: 1 }}
         />
         <TextField
+          value={email}
           label="Email ID"
           margin="dense"
           id="email"
           type="email"
           fullWidth
+          disabled={!!member}
           onChange={handleEmail}
           error={!!emailError}
           helperText={emailError}
           sx={{ mb: 1 }}
         />
         <TextField
+          value={phoneNo}
           label="Phone Number"
           margin="dense"
           id="number"
           type="number"
           fullWidth
+          disabled={!!member}
           onChange={handlePhoneNo}
           error={!!phoneNoError}
           helperText={phoneNoError}
           sx={{ mb: 1 }}
         />
         <TextField
+          value={address}
           label="Street Address"
           margin="dense"
           id="address"
@@ -169,12 +206,12 @@ export const MemberDialog: FC<Props> = ({ open, handleOpen }) => {
           helperText={addressError}
         />
       </DialogContent>
-      <DialogActions sx={{ pb: 4, px: 6 }}>
+      <DialogActions sx={{ pb: 4, px: 4 }}>
         <Button color="inherit" onClick={handleOpen} sx={{ mr: 2 }}>
           <b>Cancel</b>
         </Button>
         <Button variant="contained" disableElevation onClick={handleAdd}>
-          <b>Register</b>
+          <b>{member ? "Update" : "Register"}</b>
         </Button>
       </DialogActions>
     </Dialog>

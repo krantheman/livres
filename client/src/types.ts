@@ -15,6 +15,7 @@ export type Book = {
 };
 
 export type Member = {
+  id?: number;
   name: string;
   phone_no: number;
   email: string;
