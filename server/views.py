@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from sqlalchemy import or_
 from . import db
 from .models import Book, Member, Transaction
+from dateutil import parser
 
 
 book_blueprint = Blueprint("book", __name__)
@@ -122,10 +123,12 @@ transaction_blueprint = Blueprint("transaction", __name__)
 @transaction_blueprint.route("/transaction", methods=["POST"])
 def create_transaction():
     transaction_data = request.get_json()
+    transaction_data["borrow_date"] = parser.parse(
+        transaction_data["borrow_date"])
     new_transaction = Transaction(**transaction_data)
     db.session.add(new_transaction)
     db.session.commit()
-    return transaction_data, 201
+    return jsonify({"transaction": transaction_data}), 201
 
 
 @transaction_blueprint.route("/transactions")
@@ -144,8 +147,8 @@ def update_transaction(id):
     if not request.json:
         return "No transaction data provided", 400
     transaction = Transaction.query.get(id)
-    transaction.borrowDate = request.json["borrowDate"]
-    transaction.returnDate = request.json["returnDate"]
+    transaction.borrow_date = request.json["borrow_date"]
+    transaction.return_date = request.json["return_date"]
     transaction = transaction.__dict__.copy()
     del transaction["_sa_instance_state"]
     db.session.commit()

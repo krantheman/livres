@@ -75,7 +75,7 @@ const Members = () => {
       headerName: "",
       width: 130,
       renderCell: (cellValues) => (
-        <Stack direction="row" spacing={3}>
+        <Stack direction="row" spacing={4}>
           <IconButton
             color="info"
             onClick={() => {

@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import { Book, Member } from "../types";
+import { useSnackbar } from "../contexts/SnackbarContext";
 
 const Home = () => {
   const [members, setMembers] = useState<Member[]>([]);
@@ -35,15 +36,57 @@ const Home = () => {
   }, []);
 
   const [member, setMember] = useState<Member>();
+  const [memberInputValue, setMemberInputValue] = useState("");
   const handleMember = (event: any, newValue: Member | null) => {
     if (newValue) setMember(newValue);
   };
 
   const [book, setBook] = useState<Book>();
+  const [bookInputValue, setBookInputValue] = useState("");
   const handleBook = (event: any, newValue: Book | null) => {
     if (newValue) setBook(newValue);
   };
   const [date, setDate] = useState<Date | null>(new Date());
+
+  const handleReset = () => {
+    setMember(undefined);
+    setMemberInputValue("");
+    setBook(undefined);
+    setBookInputValue("");
+  };
+
+  const snackbar = useSnackbar();
+
+  const handleCreateTransaction = () => {
+    if (member && book && date)
+      fetch("/transaction", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          member_id: member.id,
+          book_id: book.bookID,
+          borrow_date: date.toISOString(),
+        }),
+      })
+        .then((res) => res.json())
+        .then(() => {
+          snackbar.makeSeverity("success");
+          snackbar.makeMessage("Transaction created successfully!");
+          snackbar.makeOpen(true);
+          handleReset();
+        })
+
+        .catch((err) => {
+          snackbar.makeMessage(
+            "Some error occurred while creating transaction."
+          );
+          snackbar.makeSeverity("error");
+          snackbar.makeOpen(true);
+          console.log(err.stack);
+        });
+  };
 
   return (
     <Box my={3}>
@@ -63,6 +106,10 @@ const Home = () => {
             <Autocomplete
               id="find-member"
               sx={{ mb: 3 }}
+              inputValue={memberInputValue}
+              onInputChange={(event, newInputValue) => {
+                setMemberInputValue(newInputValue);
+              }}
               onChange={handleMember}
               options={members}
               getOptionLabel={(option) => option.name}
@@ -90,7 +137,7 @@ const Home = () => {
               )}
             />
             {member && (
-              <Stack sx={{ mb: 3 }}>
+              <Stack sx={{ mb: 3, borderRadius: 1, p: 2, bgcolor: "#f5f5f5" }}>
                 <Typography noWrap>{member.name}</Typography>
                 <Typography color="gray" noWrap>
                   {member.email}
@@ -100,6 +147,10 @@ const Home = () => {
             <Autocomplete
               id="find-book"
               sx={{ mb: 3 }}
+              inputValue={bookInputValue}
+              onInputChange={(event, newInputValue) => {
+                setBookInputValue(newInputValue);
+              }}
               onChange={handleBook}
               options={books}
               getOptionLabel={(option) => option.title}
@@ -127,7 +178,7 @@ const Home = () => {
               )}
             />
             {book && (
-              <Stack sx={{ mb: 3 }}>
+              <Stack sx={{ mb: 3, borderRadius: 1, p: 2, bgcolor: "#f5f5f5" }}>
                 <Typography noWrap>{book.title}</Typography>
                 <Typography color="gray" noWrap>
                   {book.authors}
@@ -150,6 +201,7 @@ const Home = () => {
                 endIcon={<RestartAltIcon />}
                 size="large"
                 sx={{ mr: 1, width: "100%" }}
+                onClick={handleReset}
               >
                 Reset Data
               </Button>
@@ -159,6 +211,8 @@ const Home = () => {
                 endIcon={<ReceiptIcon />}
                 size="large"
                 sx={{ ml: 1, width: "100%" }}
+                disabled={!(member && book && date)}
+                onClick={handleCreateTransaction}
               >
                 Create Transaction
               </Button>

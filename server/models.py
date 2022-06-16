@@ -30,8 +30,8 @@ class Member(db.Model):
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    borrowDate = db.Column(db.Date, nullable=False, default=datetime.today())
-    returnDate = db.Column(db.Date)
+    borrow_date = db.Column(db.Date, nullable=False, default=datetime.today())
+    return_date = db.Column(db.Date)
     book_id = db.Column(db.String(10), db.ForeignKey(
         'book.bookID'), nullable=False)
     member_id = db.Column(db.Integer, db.ForeignKey(

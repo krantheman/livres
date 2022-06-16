@@ -18,6 +18,9 @@ const theme = createTheme({
   //     main: "#ADFC92",
   //   },
   // },
+  shape: {
+    borderRadius: 8,
+  },
   typography: {
     button: {
       textTransform: "none",
