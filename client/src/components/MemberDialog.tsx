@@ -1,30 +1,13 @@
-import { Slide } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-import { TransitionProps } from "@mui/material/transitions";
-import {
-  ChangeEvent,
-  FC,
-  forwardRef,
-  ReactElement,
-  Ref,
-  useState,
-} from "react";
+import { ChangeEvent, FC, useState } from "react";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { Member } from "../types";
-
-const Transition = forwardRef(function Transition(
-  transitionProps: TransitionProps & {
-    children: ReactElement<any, any>;
-  },
-  ref: Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...transitionProps} />;
-});
+import { Transition } from "./Transition";
 
 type Props = {
   open: boolean;
@@ -85,7 +68,7 @@ export const MemberDialog: FC<Props> = ({ open, handleOpen, member }) => {
         .then((res) =>
           res.json().then(() => {
             snackbar.makeSeverity("success");
-            snackbar.makeMessage("Member details edited successfully!");
+            snackbar.makeMessage("Member details updated successfully!");
             snackbar.makeOpen(true);
             handleOpen();
           })
@@ -99,45 +82,45 @@ export const MemberDialog: FC<Props> = ({ open, handleOpen, member }) => {
       // For adding new member
     } else
       await fetch(`/member?email=${email}&phone_no=${phoneNo}`)
-        .then((res) =>
-          res.json().then((data) => {
-            if (data.member) {
-              if (data.member.email === email) {
-                setEmailError("User with this email ID already exists.");
-              } else if (data.member.phone_no === parseInt(phoneNo)) {
-                setPhoneNoError("User with this phone number already exists.");
-              }
-              return;
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.member) {
+            if (data.member.email === email) {
+              setEmailError("User with this email ID already exists.");
+            } else if (data.member.phone_no === parseInt(phoneNo)) {
+              setPhoneNoError("User with this phone number already exists.");
             }
+            return;
+          }
 
-            fetch("/member", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                name,
-                email,
-                address,
-                phone_no: parseInt(phoneNo),
-              }),
-            })
-              .then((res) =>
-                res.json().then(() => {
-                  snackbar.makeSeverity("success");
-                  snackbar.makeMessage("New member added successfully!");
-                  snackbar.makeOpen(true);
-                  handleOpen();
-                })
-              )
-              .catch((err) => {
-                snackbar.makeMessage("Some error occurred while registering.");
-                snackbar.makeSeverity("error");
-                snackbar.makeOpen(true);
-                console.log(err);
-              });
+          fetch("/member", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name,
+              email,
+              address,
+              phone_no: parseInt(phoneNo),
+            }),
           })
-        )
+            .then((res) => res.json())
+            .then(() => {
+              snackbar.makeSeverity("success");
+              snackbar.makeMessage("New member added successfully!");
+              snackbar.makeOpen(true);
+              handleOpen();
+            })
+
+            .catch((err) => {
+              snackbar.makeMessage("Some error occurred while registering.");
+              snackbar.makeSeverity("error");
+              snackbar.makeOpen(true);
+              console.log(err);
+            });
+        })
+
         .catch((err) => {
           snackbar.makeMessage("Some error occurred while registering.");
           snackbar.makeSeverity("error");

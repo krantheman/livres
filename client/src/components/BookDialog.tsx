@@ -1,4 +1,4 @@
-import { Divider, Slide, Typography } from "@mui/material";
+import { Divider, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -6,27 +6,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-import { TransitionProps } from "@mui/material/transitions";
-import {
-  ChangeEvent,
-  FC,
-  forwardRef,
-  ReactElement,
-  Ref,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { Book } from "../types";
-
-const Transition = forwardRef(function Transition(
-  transitionProps: TransitionProps & {
-    children: ReactElement<any, any>;
-  },
-  ref: Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...transitionProps} />;
-});
+import { Transition } from "./Transition";
 
 type Props = {
   book: Book;

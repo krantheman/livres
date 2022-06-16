@@ -13,11 +13,11 @@ const Books = () => {
   };
 
   useEffect(() => {
-    fetch("/books").then((res) =>
-      res.json().then((data) => {
+    fetch("/books")
+      .then((res) => res.json())
+      .then((data) => {
         setBooks(data.books);
-      })
-    );
+      });
   }, []);
 
   return (

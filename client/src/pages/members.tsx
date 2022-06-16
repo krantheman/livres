@@ -7,6 +7,7 @@ import { Member } from "../types";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { MemberDialog } from "../components/MemberDialog";
+import { DeleteDialog } from "../components/DeleteDialog";
 
 const Members = () => {
   const [members, setMembers] = useState<Member[]>([]);
@@ -57,7 +58,7 @@ const Members = () => {
         setRows(data.members);
       })
     );
-  }, [editDialogOpen]);
+  }, [editDialogOpen, deleteDialogOpen]);
 
   const columns: GridColDef[] = [
     { field: "name", headerName: "Name", flex: 1 },
@@ -115,6 +116,13 @@ const Members = () => {
         <MemberDialog
           open={editDialogOpen}
           handleOpen={handleEditDialogOpen}
+          member={row}
+        />
+      )}
+      {deleteDialogOpen && row && (
+        <DeleteDialog
+          open={deleteDialogOpen}
+          handleOpen={handleDeleteDialogOpen}
           member={row}
         />
       )}

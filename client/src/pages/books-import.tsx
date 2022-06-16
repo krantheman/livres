@@ -22,16 +22,16 @@ const BooksImport = () => {
     fetch(
       `https://frappe.io/api/method/frappe-library?page=${page.toString()}&title=${search}&authors=${search}&isbn=${search}&publisher=${search}`
     )
-      .then((res) =>
-        res.json().then((data) => {
-          let bookData = data.message;
-          bookData.forEach((book: any) => {
-            book.num_pages = book["  num_pages"];
-            delete book["  num_pages"];
-          });
-          setBooks(bookData);
-        })
-      )
+      .then((res) => res.json())
+      .then((data) => {
+        let bookData = data.message;
+        bookData.forEach((book: any) => {
+          book.num_pages = book["  num_pages"];
+          delete book["  num_pages"];
+        });
+        setBooks(bookData);
+      })
+
       .catch((err) => {
         console.log(err);
       });
