@@ -10,6 +10,11 @@ import { MemberDialog } from "../components/MemberDialog";
 import { DeleteDialog } from "../components/DeleteDialog";
 
 const Members = () => {
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const handleAddDialogOpen = () => {
+    setAddDialogOpen(!addDialogOpen);
+  };
+
   const [members, setMembers] = useState<Member[]>([]);
   const [rows, setRows] = useState<Member[]>([]);
 
@@ -58,7 +63,7 @@ const Members = () => {
         setRows(data.members);
       })
     );
-  }, [editDialogOpen, deleteDialogOpen]);
+  }, [editDialogOpen, deleteDialogOpen, addDialogOpen]);
 
   const columns: GridColDef[] = [
     { field: "name", headerName: "Name", flex: 1 },
@@ -99,6 +104,8 @@ const Members = () => {
       buttonIcon={<PersonAddAltRoundedIcon />}
       searchLabel="Search for a member by name, phone number or email ID"
       handleSearch={handleSearch}
+      addDialogOpen={addDialogOpen}
+      handleAddDialogOpen={handleAddDialogOpen}
       page="members"
     >
       <Box sx={{ height: 650, mt: 1 }}>

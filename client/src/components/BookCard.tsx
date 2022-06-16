@@ -29,7 +29,9 @@ const BookCard: FC<Props> = ({ book, forImport }) => {
           <Typography variant="h6" sx={{ fontWeight: "bold" }} noWrap>
             {book.title}
           </Typography>
-          <Typography sx={{ color: "gray" }}>{book.authors}</Typography>
+          <Typography sx={{ color: "gray" }} noWrap>
+            {book.authors}
+          </Typography>
           <Rating
             name="read-only"
             value={parseFloat(book.average_rating)}

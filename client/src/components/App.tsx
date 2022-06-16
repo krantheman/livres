@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { SnackbarContextProvider } from "../contexts/SnackbarContext";
 import Books from "../pages/books";
 import BooksImport from "../pages/books-import";
+import Home from "../pages/home";
 import Members from "../pages/members";
 import NavBar from "./NavBar";
 import Toast from "./Toast";
@@ -32,6 +33,7 @@ const App = () => {
           <NavBar />
           <Container>
             <Routes>
+              <Route path="/" element={<Home />} />
               <Route path="/books" element={<Books />} />
               <Route path="/books/import" element={<BooksImport />} />
               <Route path="/members" element={<Members />} />

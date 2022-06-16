@@ -18,6 +18,8 @@ type Props = {
   handleSearch: (event: ChangeEvent<HTMLInputElement>) => void;
   children: ReactNode;
   page?: "books" | "members";
+  addDialogOpen?: boolean;
+  handleAddDialogOpen?: () => void;
 };
 
 const PageLayout: FC<Props> = ({
@@ -28,12 +30,9 @@ const PageLayout: FC<Props> = ({
   handleSearch,
   children,
   page,
+  addDialogOpen,
+  handleAddDialogOpen,
 }) => {
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const handleDialogOpen = () => {
-    setDialogOpen(!dialogOpen);
-  };
-
   const buttonProps: any = {
     variant: "contained",
     endIcon: buttonIcon,
@@ -42,7 +41,7 @@ const PageLayout: FC<Props> = ({
   };
 
   return (
-    <Stack my={4}>
+    <Stack my={3}>
       <Stack direction="row" alignItems="center" mb={3}>
         <Typography variant="h4" sx={{ fontWeight: "bold" }}>
           {header}
@@ -53,7 +52,7 @@ const PageLayout: FC<Props> = ({
           </Button>
         )}
         {page === "members" && (
-          <Button onClick={handleDialogOpen} {...buttonProps}>
+          <Button onClick={handleAddDialogOpen} {...buttonProps}>
             <b>{buttonText}</b>
           </Button>
         )}
@@ -73,8 +72,8 @@ const PageLayout: FC<Props> = ({
         }}
       />
       {children}
-      {dialogOpen && (
-        <MemberDialog open={dialogOpen} handleOpen={handleDialogOpen} />
+      {addDialogOpen && handleAddDialogOpen && (
+        <MemberDialog open={addDialogOpen} handleOpen={handleAddDialogOpen} />
       )}
     </Stack>
   );

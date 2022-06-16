@@ -15,7 +15,9 @@ const NavBar: FC = () => {
           sx={{ py: 1 }}
         >
           <Toolbar>
-            <img src={logo} alt="logo" height={46} />
+            <Link to="/">
+              <img src={logo} alt="logo" height={46} />
+            </Link>
             <Stack direction="row" spacing={3} alignItems="center" ml="auto">
               <Button component={Link} to="books" sx={{ fontWeight: "bold" }}>
                 BOOKS
