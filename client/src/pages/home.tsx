@@ -1,12 +1,13 @@
 import BookIcon from "@mui/icons-material/Book";
 import PersonIcon from "@mui/icons-material/Person";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import {
   Autocomplete,
   Box,
   Button,
   Divider,
   InputAdornment,
-  Paper,
   Stack,
   TextField,
   Typography,
@@ -14,10 +15,12 @@ import {
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useEffect, useState } from "react";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import ReceiptIcon from "@mui/icons-material/Receipt";
-import { Book, Member } from "../types";
 import { useSnackbar } from "../contexts/SnackbarContext";
+import { Book, Member } from "../types";
+import returned from "../assets/returned.png";
+import borrowed from "../assets/borrowed.png";
+import overdue from "../assets/overdue.png";
+import TransactionCard from "../components/TransactionCard";
 
 const Home = () => {
   const [members, setMembers] = useState<Member[]>([]);
@@ -96,11 +99,11 @@ const Home = () => {
       <Stack
         direction="row"
         divider={<Divider orientation="vertical" flexItem />}
-        spacing={2}
+        spacing={5}
       >
-        <Paper elevation={0} sx={{ width: "50%" }}>
+        <Box sx={{ width: "65%" }}>
           <Stack>
-            <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
+            <Typography variant="h5" sx={{ fontWeight: "bold", mb: 3 }}>
               Lend a Book
             </Typography>
             <Autocomplete
@@ -218,8 +221,27 @@ const Home = () => {
               </Button>
             </Stack>
           </Stack>
-        </Paper>
-        <Paper elevation={0}></Paper>
+        </Box>
+        <Box sx={{ width: "35%" }}>
+          <TransactionCard
+            color="#e8f5e9"
+            img={returned}
+            header="Returned books"
+            value="43423"
+          />
+          <TransactionCard
+            color="#f9fbe7"
+            img={borrowed}
+            header="Borrowed books"
+            value="323"
+          />
+          <TransactionCard
+            color="#ffebee"
+            img={overdue}
+            header="Overdue books"
+            value="7"
+          />
+        </Box>
       </Stack>
     </Box>
   );
