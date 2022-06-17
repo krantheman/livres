@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import or_
+from sqlalchemy.orm import joinedload
+from server.utils import calculate_debt
 from . import db
 from .models import Book, Member, Transaction
 from dateutil import parser
@@ -125,6 +127,10 @@ def create_transaction():
     transaction_data = request.get_json()
     transaction_data["borrow_date"] = parser.parse(
         transaction_data["borrow_date"])
+    member = Member.query.get(transaction_data["member_id"])
+    member.debt += calculate_debt(transaction_data["borrow_date"])
+    book = Book.query.get(transaction_data["book_id"])
+    book.stock -= 1
     new_transaction = Transaction(**transaction_data)
     db.session.add(new_transaction)
     db.session.commit()
@@ -134,10 +140,16 @@ def create_transaction():
 @transaction_blueprint.route("/transactions")
 def get_transactions():
     transactions = []
-    transaction_list = Transaction.query.all()
+    transaction_list = Transaction.query.options(
+        joinedload(Transaction.book), joinedload(Transaction.member)).all()
+
     for transaction in transaction_list:
         transaction_as_dict = transaction.__dict__
         del transaction_as_dict["_sa_instance_state"]
+        transaction_as_dict["member"] = transaction.member.__dict__
+        del transaction_as_dict["member"]["_sa_instance_state"]
+        transaction_as_dict["book"] = transaction.book.__dict__
+        del transaction_as_dict["book"]["_sa_instance_state"]
         transactions.append(transaction_as_dict)
     return jsonify({"transactions": transactions})
 

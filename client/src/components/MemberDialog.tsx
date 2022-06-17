@@ -103,6 +103,7 @@ export const MemberDialog: FC<Props> = ({ open, handleOpen, member }) => {
               email,
               address,
               phone_no: parseInt(phoneNo),
+              debt: 0,
             }),
           })
             .then((res) => res.json())

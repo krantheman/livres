@@ -6,6 +6,7 @@ import Books from "../pages/books";
 import BooksImport from "../pages/books-import";
 import Home from "../pages/home";
 import Members from "../pages/members";
+import Transactions from "../pages/transactions";
 import NavBar from "./NavBar";
 import Toast from "./Toast";
 
@@ -40,6 +41,7 @@ const App = () => {
               <Route path="/books" element={<Books />} />
               <Route path="/books/import" element={<BooksImport />} />
               <Route path="/members" element={<Members />} />
+              <Route path="/transactions" element={<Transactions />} />
             </Routes>
           </Container>
           <Toast />

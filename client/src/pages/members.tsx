@@ -66,10 +66,11 @@ const Members = () => {
   }, [editDialogOpen, deleteDialogOpen, addDialogOpen]);
 
   const columns: GridColDef[] = [
-    { field: "name", headerName: "Name", flex: 1 },
+    { field: "name", headerName: "Name", width: 200 },
     { field: "email", headerName: "Email ID", flex: 1 },
-    { field: "phone_no", headerName: "Phone number", flex: 1 },
+    { field: "phone_no", headerName: "Phone number", width: 180 },
     { field: "address", headerName: "Address", flex: 1 },
+    { field: "debt", headerName: "Debt (Rs.)", width: 120 },
     {
       field: "util",
       headerName: "",

@@ -16,7 +16,8 @@ class Book(db.Model):
     publication_date = db.Column(db.String(15))
     publisher = db.Column(db.String(50))
     stock = db.Column(db.Integer, default=1)
-    transactions = db.relationship('Transaction', backref='book', lazy=True)
+    transactions = db.relationship(
+        'Transaction', cascade="all, delete", backref='book', lazy=True)
 
 
 class Member(db.Model):
@@ -25,8 +26,12 @@ class Member(db.Model):
     phone_no = db.Column(db.Integer, unique=True, nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
     address = db.Column(db.String(100), nullable=False)
-    transactions = db.relationship('Transaction', backref='member', lazy=True)
+    debt = db.Column(db.Integer, default=0)
+    transactions = db.relationship(
+        'Transaction', cascade="all, delete", backref='member', lazy=True)
 
+
+# TODO: on delete cascade
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -41,6 +41,7 @@ export const DeleteDialog: FC<Props> = ({ member, open, handleOpen }) => {
     "Email ID: ": member.email,
     "Phone number: ": member.phone_no,
     "Address: ": member.address,
+    "Debt: ": member.debt,
   };
 
   return (

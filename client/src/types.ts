@@ -20,4 +20,15 @@ export type Member = {
   phone_no: number;
   email: string;
   address: string;
+  debt: number | string;
+};
+
+export type Transaction = {
+  id?: number;
+  book_id: string;
+  book: Book;
+  member_id: number;
+  member: Member;
+  borrow_date: Date;
+  return_date: Date | null;
 };

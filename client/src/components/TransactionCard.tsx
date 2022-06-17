@@ -18,7 +18,6 @@ const TransactionCard: FC<Props> = ({ color, img, header, value }) => {
         bgcolor: color,
         borderRadius: 1,
       }}
-      mb={4}
     >
       <Stack mr={4} justifyContent="center">
         <img style={{ height: "96px", width: "96px" }} src={img} alt="Book" />

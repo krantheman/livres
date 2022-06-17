@@ -16,7 +16,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useEffect, useState } from "react";
 import { useSnackbar } from "../contexts/SnackbarContext";
-import { Book, Member } from "../types";
+import { Book, Member, Transaction } from "../types";
 import returned from "../assets/returned.png";
 import borrowed from "../assets/borrowed.png";
 import overdue from "../assets/overdue.png";
@@ -25,18 +25,7 @@ import TransactionCard from "../components/TransactionCard";
 const Home = () => {
   const [members, setMembers] = useState<Member[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
-  useEffect(() => {
-    fetch("/books")
-      .then((res) => res.json())
-      .then((data) => {
-        setBooks(data.books);
-      });
-    fetch("/members")
-      .then((res) => res.json())
-      .then((data) => {
-        setMembers(data.members);
-      });
-  }, []);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   const [member, setMember] = useState<Member>();
   const [memberInputValue, setMemberInputValue] = useState("");
@@ -57,6 +46,24 @@ const Home = () => {
     setBook(undefined);
     setBookInputValue("");
   };
+
+  useEffect(() => {
+    fetch("/books")
+      .then((res) => res.json())
+      .then((data) => {
+        setBooks(data.books);
+      });
+    fetch("/members")
+      .then((res) => res.json())
+      .then((data) => {
+        setMembers(data.members);
+      });
+    fetch("/transactions")
+      .then((res) => res.json())
+      .then((data) => {
+        setTransactions(data.transactions);
+      });
+  }, [member, book]);
 
   const snackbar = useSnackbar();
 
@@ -80,7 +87,6 @@ const Home = () => {
           snackbar.makeOpen(true);
           handleReset();
         })
-
         .catch((err) => {
           snackbar.makeMessage(
             "Some error occurred while creating transaction."
@@ -101,6 +107,26 @@ const Home = () => {
         divider={<Divider orientation="vertical" flexItem />}
         spacing={5}
       >
+        <Stack sx={{ width: "35%" }} spacing={4}>
+          <TransactionCard
+            color="#e8f5e9"
+            img={returned}
+            header="Returned books"
+            value="43423"
+          />
+          <TransactionCard
+            color="#f9fbe7"
+            img={borrowed}
+            header="Borrowed books"
+            value="323"
+          />
+          <TransactionCard
+            color="#ffebee"
+            img={overdue}
+            header="Overdue books"
+            value="7"
+          />
+        </Stack>
         <Box sx={{ width: "65%" }}>
           <Stack>
             <Typography variant="h5" sx={{ fontWeight: "bold", mb: 3 }}>
@@ -115,6 +141,7 @@ const Home = () => {
               }}
               onChange={handleMember}
               options={members}
+              getOptionDisabled={(option) => option.debt > 500}
               getOptionLabel={(option) => option.name}
               renderOption={(props, option) => (
                 <Box component="li" {...props}>
@@ -156,6 +183,7 @@ const Home = () => {
               }}
               onChange={handleBook}
               options={books}
+              getOptionDisabled={(option) => option.stock === 0}
               getOptionLabel={(option) => option.title}
               renderOption={(props, option) => (
                 <Box component="li" {...props}>
@@ -221,26 +249,6 @@ const Home = () => {
               </Button>
             </Stack>
           </Stack>
-        </Box>
-        <Box sx={{ width: "35%" }}>
-          <TransactionCard
-            color="#e8f5e9"
-            img={returned}
-            header="Returned books"
-            value="43423"
-          />
-          <TransactionCard
-            color="#f9fbe7"
-            img={borrowed}
-            header="Borrowed books"
-            value="323"
-          />
-          <TransactionCard
-            color="#ffebee"
-            img={overdue}
-            header="Overdue books"
-            value="7"
-          />
         </Box>
       </Stack>
     </Box>
