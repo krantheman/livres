@@ -8,7 +8,7 @@ type Props = {
   value: string;
 };
 
-const TransactionCard: FC<Props> = ({ color, img, header, value }) => {
+const InfoCard: FC<Props> = ({ color, img, header, value }) => {
   return (
     <Stack
       direction="row"
@@ -34,4 +34,4 @@ const TransactionCard: FC<Props> = ({ color, img, header, value }) => {
   );
 };
 
-export default TransactionCard;
+export default InfoCard;

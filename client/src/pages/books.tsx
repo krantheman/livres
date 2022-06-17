@@ -1,17 +1,12 @@
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import { ChangeEvent, useEffect, useState } from "react";
-import BookCard from "../components/BookCard";
+import BookListItem from "../components/BookListItem";
 import PageLayout from "../components/PageLayout";
 import { Book } from "../types";
 
 const Books = () => {
+
   const [books, setBooks] = useState<Book[]>([]);
-
-  const [search, setSearch] = useState("");
-  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.currentTarget.value);
-  };
-
   useEffect(() => {
     fetch("/books")
       .then((res) => res.json())
@@ -19,6 +14,11 @@ const Books = () => {
         setBooks(data.books);
       });
   }, []);
+
+  const [search, setSearch] = useState("");
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.currentTarget.value);
+  };
 
   return (
     <PageLayout
@@ -36,7 +36,7 @@ const Books = () => {
             book.authors.toLowerCase().includes(search.toLowerCase())
         )
         .map((book) => (
-          <BookCard key={book.bookID} book={book} />
+          <BookListItem key={book.bookID} book={book} />
         ))}
     </PageLayout>
   );

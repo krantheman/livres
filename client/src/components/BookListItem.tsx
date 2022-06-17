@@ -15,7 +15,7 @@ type Props = {
   forImport?: boolean;
 };
 
-const BookCard: FC<Props> = ({ book, forImport }) => {
+const BookListItem: FC<Props> = ({ book, forImport }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const handleDialogOpen = () => {
     setDialogOpen(!dialogOpen);
@@ -88,4 +88,4 @@ const BookCard: FC<Props> = ({ book, forImport }) => {
   );
 };
 
-export default BookCard;
+export default BookListItem;

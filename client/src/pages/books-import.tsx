@@ -1,6 +1,6 @@
 import { Pagination } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
-import BookCard from "../components/BookCard";
+import BookListItem from "../components/BookListItem";
 import PageLayout from "../components/PageLayout";
 import { Book } from "../types";
 
@@ -44,7 +44,7 @@ const BooksImport = () => {
       handleSearch={handleSearch}
     >
       {books.map((book, id) => (
-        <BookCard key={id} book={book} forImport />
+        <BookListItem key={id} book={book} forImport />
       ))}
       <Pagination
         count={200}

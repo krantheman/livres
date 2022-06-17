@@ -20,7 +20,7 @@ import { Book, Member, Transaction } from "../types";
 import returned from "../assets/returned.png";
 import borrowed from "../assets/borrowed.png";
 import overdue from "../assets/overdue.png";
-import TransactionCard from "../components/TransactionCard";
+import InfoCard from "../components/InfoCard";
 
 const Home = () => {
   const [members, setMembers] = useState<Member[]>([]);
@@ -108,19 +108,19 @@ const Home = () => {
         spacing={5}
       >
         <Stack sx={{ width: "35%" }} spacing={4}>
-          <TransactionCard
+          <InfoCard
             color="#e8f5e9"
             img={returned}
             header="Returned books"
             value="43423"
           />
-          <TransactionCard
+          <InfoCard
             color="#f9fbe7"
             img={borrowed}
             header="Borrowed books"
             value="323"
           />
-          <TransactionCard
+          <InfoCard
             color="#ffebee"
             img={overdue}
             header="Overdue books"
