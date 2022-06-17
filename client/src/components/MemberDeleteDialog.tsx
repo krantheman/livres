@@ -15,7 +15,7 @@ type Props = {
   handleOpen: () => void;
 };
 
-export const DeleteDialog: FC<Props> = ({ member, open, handleOpen }) => {
+export const MemberDeleteDialog: FC<Props> = ({ member, open, handleOpen }) => {
   const snackbar = useSnackbar();
 
   const handleDelete = () => {

@@ -14,12 +14,24 @@ import {
 } from "@mui/material";
 import { FC, useState } from "react";
 import { Transaction } from "../types";
+import { blue, red } from "@mui/material/colors";
+import { TransactionDeleteDialog } from "./TransactionDeleteDialog";
 
 type Props = {
   transaction: Transaction;
+  editOpen: boolean;
+  handleEditOpen: () => void;
+  deleteOpen: boolean;
+  handleDeleteOpen: () => void;
 };
 
-const TransactionListItem: FC<Props> = ({ transaction }) => {
+const TransactionListItem: FC<Props> = ({
+  transaction,
+  editOpen,
+  handleEditOpen,
+  deleteOpen,
+  handleDeleteOpen,
+}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -29,8 +41,20 @@ const TransactionListItem: FC<Props> = ({ transaction }) => {
     setAnchorEl(null);
   };
 
+  const handleEdit = () => {
+    handleClose();
+    handleEditOpen();
+  };
+  const handleDelete = () => {
+    handleClose();
+    handleDeleteOpen();
+  };
+
   return (
-    <Paper elevation={0} sx={{ p: 4, border: 1, borderColor: "lightgray" }}>
+    <Paper
+      elevation={0}
+      sx={{ mb: 3, p: 4, border: 1, borderColor: "lightgray" }}
+    >
       <Stack direction="row">
         <Typography variant="h5" noWrap sx={{ width: "100%" }}>
           <b>{`Transaction ID: ${transaction.id}`}</b>
@@ -49,13 +73,13 @@ const TransactionListItem: FC<Props> = ({ transaction }) => {
         >
           <MenuItem onClick={handleClose}>
             <ListItemIcon>
-              <EditIcon fontSize="small" color="info" />
+              <EditIcon fontSize="small" sx={{ color: blue[400] }} />
             </ListItemIcon>
             <ListItemText>Edit</ListItemText>
           </MenuItem>
-          <MenuItem onClick={handleClose}>
+          <MenuItem onClick={handleDelete}>
             <ListItemIcon>
-              <DeleteIcon fontSize="small" color="error" />
+              <DeleteIcon fontSize="small" sx={{ color: red[400] }} />
             </ListItemIcon>
             <ListItemText>Delete</ListItemText>
           </MenuItem>
@@ -86,10 +110,17 @@ const TransactionListItem: FC<Props> = ({ transaction }) => {
       </Typography>
       <Typography sx={{ color: "gray" }} noWrap>
         <b>{"Returned on: "}</b>
-        { transaction.return_date
+        {transaction.return_date
           ? transaction.return_date.toString().substring(0, 16)
           : "N/A"}
       </Typography>
+      {deleteOpen && (
+        <TransactionDeleteDialog
+          open={deleteOpen}
+          handleOpen={handleDeleteOpen}
+          transaction={transaction}
+        />
+      )}
     </Paper>
   );
 };

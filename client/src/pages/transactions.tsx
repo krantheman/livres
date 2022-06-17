@@ -4,6 +4,21 @@ import TransactionListItem from "../components/TransactionListItem";
 import { Transaction } from "../types";
 
 const Transactions = () => {
+  const [search, setSearch] = useState("");
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.currentTarget.value);
+  };
+
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const handleEditDialogOpen = () => {
+    setEditDialogOpen(!editDialogOpen);
+  };
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const handleDeleteDialogOpen = () => {
+    setDeleteDialogOpen(!deleteDialogOpen);
+  };
+
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   useEffect(() => {
     fetch("/transactions")
@@ -11,14 +26,7 @@ const Transactions = () => {
       .then((data) => {
         setTransactions(data.transactions);
       });
-  }, []);
-
-  console.log(transactions);
-
-  const [search, setSearch] = useState("");
-  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.currentTarget.value);
-  };
+  }, [editDialogOpen, deleteDialogOpen]);
 
   return (
     <PageLayout
@@ -35,7 +43,14 @@ const Transactions = () => {
             transaction.book.title.toLowerCase().includes(search.toLowerCase())
         )
         .map((transaction) => (
-          <TransactionListItem key={transaction.id} transaction={transaction} />
+          <TransactionListItem
+            key={transaction.id}
+            transaction={transaction}
+            editOpen={editDialogOpen}
+            handleEditOpen={handleEditDialogOpen}
+            deleteOpen={deleteDialogOpen}
+            handleDeleteOpen={handleDeleteDialogOpen}
+          />
         ))}
     </PageLayout>
   );

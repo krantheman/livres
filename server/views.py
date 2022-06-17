@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import or_
 from sqlalchemy.orm import joinedload
-from server.utils import calculate_debt
+from server.utils import calculate_debt, row2dict
 from . import db
 from .models import Book, Member, Transaction
 from dateutil import parser
@@ -128,7 +128,7 @@ def create_transaction():
     transaction_data["borrow_date"] = parser.parse(
         transaction_data["borrow_date"])
     member = Member.query.get(transaction_data["member_id"])
-    member.debt += calculate_debt(transaction_data["borrow_date"])
+    member.debt += calculate_debt(transaction_data["borrow_date"].date())
     book = Book.query.get(transaction_data["book_id"])
     book.stock -= 1
     new_transaction = Transaction(**transaction_data)
@@ -146,10 +146,8 @@ def get_transactions():
     for transaction in transaction_list:
         transaction_as_dict = transaction.__dict__
         del transaction_as_dict["_sa_instance_state"]
-        transaction_as_dict["member"] = transaction.member.__dict__
-        del transaction_as_dict["member"]["_sa_instance_state"]
-        transaction_as_dict["book"] = transaction.book.__dict__
-        del transaction_as_dict["book"]["_sa_instance_state"]
+        transaction_as_dict["member"] = row2dict(transaction.member)
+        transaction_as_dict["book"] = row2dict(transaction.book)
         transactions.append(transaction_as_dict)
     return jsonify({"transactions": transactions})
 
@@ -172,6 +170,11 @@ def delete_transaction(id):
     transaction = Transaction.query.get(id)
     if not transaction:
         return "Transaction does not exist", 404
+    if not transaction.return_date:
+        member = Member.query.get(transaction.member_id)
+        member.debt -= calculate_debt(transaction.borrow_date)
+        book = Book.query.get(transaction.book_id)
+        book.stock += 1
     db.session.delete(transaction)
     db.session.commit()
     return "Transaction deleted successfully"

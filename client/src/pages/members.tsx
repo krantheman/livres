@@ -7,7 +7,8 @@ import { Member } from "../types";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { MemberDialog } from "../components/MemberDialog";
-import { DeleteDialog } from "../components/DeleteDialog";
+import { MemberDeleteDialog } from "../components/MemberDeleteDialog";
+import { blue, red } from "@mui/material/colors";
 
 const Members = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -78,7 +79,7 @@ const Members = () => {
       renderCell: (cellValues) => (
         <Stack direction="row" spacing={4}>
           <IconButton
-            color="info"
+            sx={{ color: blue[400] }}
             onClick={() => {
               handleEdit(cellValues);
             }}
@@ -86,7 +87,7 @@ const Members = () => {
             <EditIcon />
           </IconButton>
           <IconButton
-            color="error"
+            sx={{ color: red[400] }}
             onClick={() => {
               handleDelete(cellValues);
             }}
@@ -128,7 +129,7 @@ const Members = () => {
         />
       )}
       {deleteDialogOpen && row && (
-        <DeleteDialog
+        <MemberDeleteDialog
           open={deleteDialogOpen}
           handleOpen={handleDeleteDialogOpen}
           member={row}

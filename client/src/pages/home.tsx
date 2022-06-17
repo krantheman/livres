@@ -21,6 +21,7 @@ import returned from "../assets/returned.png";
 import borrowed from "../assets/borrowed.png";
 import overdue from "../assets/overdue.png";
 import InfoCard from "../components/InfoCard";
+import { green, red, yellow, grey } from "@mui/material/colors";
 
 const Home = () => {
   const [members, setMembers] = useState<Member[]>([]);
@@ -109,19 +110,19 @@ const Home = () => {
       >
         <Stack sx={{ width: "35%" }} spacing={4}>
           <InfoCard
-            color="#e8f5e9"
+            color={green[50]}
             img={returned}
             header="Returned books"
             value="43423"
           />
           <InfoCard
-            color="#f9fbe7"
+            color={yellow[50]}
             img={borrowed}
             header="Borrowed books"
             value="323"
           />
           <InfoCard
-            color="#ffebee"
+            color={red[50]}
             img={overdue}
             header="Overdue books"
             value="7"
@@ -167,7 +168,7 @@ const Home = () => {
               )}
             />
             {member && (
-              <Stack sx={{ mb: 3, borderRadius: 1, p: 2, bgcolor: "#f5f5f5" }}>
+              <Stack sx={{ mb: 3, borderRadius: 1, p: 2, bgcolor: grey[100] }}>
                 <Typography noWrap>{member.name}</Typography>
                 <Typography color="gray" noWrap>
                   {member.email}
