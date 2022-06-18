@@ -23,6 +23,8 @@ export const TransactionDeleteDialog: FC<Props> = ({
 }) => {
   const snackbar = useSnackbar();
 
+  console.log(transaction.id);
+
   const handleDelete = () => {
     fetch(`/transaction/${transaction.id}`, {
       method: "DELETE",
@@ -52,35 +54,34 @@ export const TransactionDeleteDialog: FC<Props> = ({
         <b>Delete Transaction?</b>
       </DialogTitle>
       <DialogContent>
-        <Typography variant="h6" noWrap mt={2}>
+        <Typography variant="h6" mt={2}>
           <b>Member</b>
         </Typography>
-        <Typography sx={{ color: "gray" }} noWrap>
+        <Typography sx={{ color: "gray" }}>
           <b>{"Name: "}</b> {transaction.member.name}
         </Typography>
-        <Typography sx={{ color: "gray" }} noWrap>
+        <Typography sx={{ color: "gray" }}>
           <b>{"Email ID: "}</b> {transaction.member.email}
         </Typography>
-        <Typography variant="h6" noWrap mt={1}>
+        <Typography variant="h6" mt={1}>
           <b>Book</b>
         </Typography>
-        <Typography sx={{ color: "gray" }} noWrap>
+        <Typography sx={{ color: "gray" }}>
           <b>{"Title: "}</b> {transaction.book.title}
         </Typography>
-        <Typography sx={{ color: "gray" }} noWrap>
+        <Typography sx={{ color: "gray" }}>
           <b>{"Author/s: "}</b> {transaction.book.authors}
         </Typography>
-        <Typography sx={{ color: "gray" }} noWrap>
+        <Typography sx={{ color: "gray" }}>
           <b>{"Borrowed on: "}</b>{" "}
           {transaction.borrow_date.toString().substring(0, 16)}
         </Typography>
-        <Typography sx={{ color: "gray" }} noWrap>
-          <b>{"Returned on: "}</b>
-          {transaction.return_date
-            ? transaction.return_date.toString().substring(0, 16)
-            : "N/A"}
-        </Typography>
-        {!transaction.return_date && (
+        {transaction.return_date ? (
+          <Typography sx={{ color: "gray" }}>
+            <b>{"Returned on: "}</b>
+            {transaction.return_date.toString().substring(0, 16)}
+          </Typography>
+        ) : (
           <>
             <Divider sx={{ my: 2 }} />
             <Typography variant="h6">

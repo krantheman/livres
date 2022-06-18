@@ -1,20 +1,8 @@
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  Divider,
-  IconButton,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { FC, useState } from "react";
+import DoneIcon from "@mui/icons-material/Done";
+import { Box, Button, Divider, Paper, Stack, Typography } from "@mui/material";
+import { FC } from "react";
 import { Transaction } from "../types";
-import { blue, red } from "@mui/material/colors";
+import IsolatedMenu from "./IsolatedMenu";
 import { TransactionDeleteDialog } from "./TransactionDeleteDialog";
 
 type Props = {
@@ -32,24 +20,6 @@ const TransactionListItem: FC<Props> = ({
   deleteOpen,
   handleDeleteOpen,
 }) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleEdit = () => {
-    handleClose();
-    handleEditOpen();
-  };
-  const handleDelete = () => {
-    handleClose();
-    handleDeleteOpen();
-  };
-
   return (
     <Paper
       elevation={0}
@@ -59,31 +29,13 @@ const TransactionListItem: FC<Props> = ({
         <Typography variant="h5" noWrap sx={{ width: "100%" }}>
           <b>{`Transaction ID: ${transaction.id}`}</b>
         </Typography>
-        <IconButton aria-label="more-button" onClick={handleMenu}>
-          <MoreVertIcon />
-        </IconButton>
-        <Menu
-          id="menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            "aria-labelledby": "more-button",
-          }}
-        >
-          <MenuItem onClick={handleClose}>
-            <ListItemIcon>
-              <EditIcon fontSize="small" sx={{ color: blue[400] }} />
-            </ListItemIcon>
-            <ListItemText>Edit</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={handleDelete}>
-            <ListItemIcon>
-              <DeleteIcon fontSize="small" sx={{ color: red[400] }} />
-            </ListItemIcon>
-            <ListItemText>Delete</ListItemText>
-          </MenuItem>
-        </Menu>
+        <IsolatedMenu
+          transaction={transaction}
+          editOpen={editOpen}
+          handleEditOpen={handleEditOpen}
+          deleteOpen={deleteOpen}
+          handleDeleteOpen={handleDeleteOpen}
+        />
       </Stack>
       <Divider sx={{ my: 1 }} />
       <Typography variant="h6" noWrap mt={2}>
@@ -108,18 +60,17 @@ const TransactionListItem: FC<Props> = ({
         <b>{"Borrowed on: "}</b>{" "}
         {transaction.borrow_date.toString().substring(0, 16)}
       </Typography>
-      <Typography sx={{ color: "gray" }} noWrap>
-        <b>{"Returned on: "}</b>
-        {transaction.return_date
-          ? transaction.return_date.toString().substring(0, 16)
-          : "N/A"}
-      </Typography>
-      {deleteOpen && (
-        <TransactionDeleteDialog
-          open={deleteOpen}
-          handleOpen={handleDeleteOpen}
-          transaction={transaction}
-        />
+      {transaction.return_date ? (
+        <Typography sx={{ color: "gray" }} noWrap>
+          <b>{"Returned on: "}</b>
+          {transaction.return_date.toString().substring(0, 16)}
+        </Typography>
+      ) : (
+        <Box mt={3}>
+          <Button variant="outlined" endIcon={<DoneIcon />}>
+            Book Received
+          </Button>
+        </Box>
       )}
     </Paper>
   );
