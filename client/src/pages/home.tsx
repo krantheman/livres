@@ -22,11 +22,18 @@ import borrowed from "../assets/borrowed.png";
 import overdue from "../assets/overdue.png";
 import InfoCard from "../components/InfoCard";
 import { green, red, yellow, grey } from "@mui/material/colors";
+import { GridColDef, DataGrid } from "@mui/x-data-grid";
+import { calculateDebt } from "../utils";
 
 const Home = () => {
   const [members, setMembers] = useState<Member[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [completeTransactionsLength, setCompleteTransactionsLength] =
+    useState(0);
+  const [dueTransactionsLength, setDueTransactionsLength] = useState(0);
+  const [overdueTransactions, setOverdueTransactions] = useState<Transaction[]>(
+    []
+  );
 
   const [member, setMember] = useState<Member>();
   const [memberInputValue, setMemberInputValue] = useState("");
@@ -62,7 +69,29 @@ const Home = () => {
     fetch("/transactions")
       .then((res) => res.json())
       .then((data) => {
-        setTransactions(data.transactions);
+        const totalTransactions = data.transactions.length;
+        const dueTransactions = data.transactions.filter(
+          (transaction: Transaction) => !transaction.return_date
+        );
+
+        setDueTransactionsLength(dueTransactions.length);
+        setCompleteTransactionsLength(
+          totalTransactions - dueTransactions.length
+        );
+
+        const overdueTransactions = dueTransactions
+          .filter(
+            (transaction: Transaction) => calculateDebt(transaction) > 100
+          )
+          .map((transaction: Transaction) => ({
+            id: transaction.id,
+            member: transaction.member.name,
+            book: transaction.book.title,
+            borrowDate: transaction.borrow_date.toString().substring(0, 16),
+            amount: calculateDebt(transaction),
+          }));
+
+        setOverdueTransactions(overdueTransactions);
       });
   }, [member, book]);
 
@@ -83,7 +112,6 @@ const Home = () => {
       })
         .then((res) => res.json())
         .then(() => {
-          snackbar.makeSeverity("success");
           snackbar.makeMessage("Transaction created successfully!");
           snackbar.makeOpen(true);
           handleReset();
@@ -98,8 +126,16 @@ const Home = () => {
         });
   };
 
+  const columns: GridColDef[] = [
+    { field: "id", headerName: "Transaction ID", width: 150 },
+    { field: "member", headerName: "Member", width: 200 },
+    { field: "book", headerName: "Book", flex: 1 },
+    { field: "borrowDate", headerName: "Borrowed On", width: 200 },
+    { field: "amount", headerName: "Amount Due", width: 150 },
+  ];
+
   return (
-    <Box my={3}>
+    <Box mt={3} mb={5}>
       <Typography variant="h4" sx={{ fontWeight: "bold", mb: 4 }}>
         Library Management System
       </Typography>
@@ -113,19 +149,19 @@ const Home = () => {
             color={green[50]}
             img={returned}
             header="Returned books"
-            value="43423"
+            value={completeTransactionsLength.toString()}
           />
           <InfoCard
             color={yellow[50]}
             img={borrowed}
             header="Borrowed books"
-            value="323"
+            value={dueTransactionsLength.toString()}
           />
           <InfoCard
             color={red[50]}
             img={overdue}
             header="Overdue books"
-            value="7"
+            value={overdueTransactions.length.toString()}
           />
         </Stack>
         <Box sx={{ width: "65%" }}>
@@ -252,6 +288,20 @@ const Home = () => {
           </Stack>
         </Box>
       </Stack>
+      <Typography variant="h5" sx={{ fontWeight: "bold", mt: 5, mb: 2 }}>
+        Overdue books
+      </Typography>
+      <Box sx={{ height: 370 }}>
+        <DataGrid
+          rows={overdueTransactions}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          disableSelectionOnClick
+          disableColumnMenu
+          autoHeight
+        />
+      </Box>
     </Box>
   );
 };

@@ -1,4 +1,4 @@
-from cmath import log
+from datetime import date, datetime
 from flask import Blueprint, jsonify, request
 from sqlalchemy import or_
 from sqlalchemy.orm import joinedload
@@ -157,14 +157,30 @@ def update_transaction(id):
     if not request.json:
         return "No transaction data provided", 400
     transaction = Transaction.query.get(id)
-    transaction.borrow_date = parser.parse(request.json["borrow_date"])
-    transaction.return_date = parser.parse(request.json["return_date"])
+    member = Member.query.get(transaction.member_id)
+    book = Book.query.get(transaction.book_id)
+
+    new_borrow_date = parser.parse(request.json["borrow_date"])
+    new_return_date = parser.parse(
+        request.json["return_date"]) if request.json["return_date"] else None
+    old_borrow_date = transaction.borrow_date
+    old_return_date = transaction.return_date
+
+    if new_return_date:
+        if not old_return_date:
+            book.stock += 1
+            member.debt -= calculate_debt(old_borrow_date)
+    else:
+        if old_return_date:
+            member.debt += calculate_debt(new_borrow_date.date())
+            book.stock -= 1
+        else:
+            member.debt += (calculate_debt(new_borrow_date.date()) -
+                            calculate_debt(old_borrow_date))
+    transaction.return_date = new_return_date
+    transaction.borrow_date = new_borrow_date
+
     transaction_as_dict = row2dict(transaction)
-    if transaction.return_date:
-        member = Member.query.get(transaction.member_id)
-        member.debt -= calculate_debt(transaction.borrow_date.date())
-        book = Book.query.get(transaction.book_id)
-        book.stock += 1
     db.session.commit()
     return {"transaction": transaction_as_dict}
 

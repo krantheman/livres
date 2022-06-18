@@ -23,7 +23,6 @@ export const TransactionDeleteDialog: FC<Props> = ({
 }) => {
   const snackbar = useSnackbar();
 
-
   const handleDelete = () => {
     fetch(`/transaction/${transaction.id}`, {
       method: "DELETE",
@@ -35,8 +34,8 @@ export const TransactionDeleteDialog: FC<Props> = ({
 
       .catch((err) => {
         console.log(err);
-        snackbar.makeMessage("Some error occurred while deleting.");
         snackbar.makeSeverity("error");
+        snackbar.makeMessage("Some error occurred while deleting.");
         snackbar.makeOpen(true);
       });
     handleOpen();
@@ -84,7 +83,7 @@ export const TransactionDeleteDialog: FC<Props> = ({
           <>
             <Divider sx={{ my: 2 }} />
             <Typography variant="h6">
-              <b>Amount to be paid: </b> {`Rs. ${calculateDebt(transaction)}`}
+              <b>Amount due: </b> {`Rs. ${calculateDebt(transaction)}`}
             </Typography>
           </>
         )}

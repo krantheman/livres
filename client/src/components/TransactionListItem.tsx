@@ -3,8 +3,10 @@ import { Box, Button, Divider, Paper, Stack, Typography } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { Transaction } from "../types";
+import { calculateDebt } from "../utils";
 import IsolatedMenu from "./IsolatedMenu";
 import { TransactionDeleteDialog } from "./TransactionDeleteDialog";
+import { TransactionEditDialog } from "./TransactionEditDialog";
 
 type Props = {
   transaction: Transaction;
@@ -60,7 +62,7 @@ const TransactionListItem: FC<Props> = ({ transaction, handleReRender }) => {
     >
       <Stack direction="row">
         <Typography variant="h5" noWrap sx={{ width: "100%" }}>
-          <b>{`Transaction ID: ${transaction.id}`}</b>
+          <b>{`Transaction No.: ${transaction.id}`}</b>
         </Typography>
         <IsolatedMenu
           handleEditOpen={handleEditOpen}
@@ -77,6 +79,11 @@ const TransactionListItem: FC<Props> = ({ transaction, handleReRender }) => {
       <Typography sx={{ color: "gray" }} noWrap>
         <b>{"Email ID: "}</b> {transaction.member.email}
       </Typography>
+      {!transaction.return_date && (
+        <Typography sx={{ color: "gray" }} noWrap>
+          <b>Amount due: </b> {`Rs. ${calculateDebt(transaction)}`}
+        </Typography>
+      )}
       <Typography variant="h6" noWrap mt={1}>
         <b>Book</b>
       </Typography>
@@ -105,6 +112,13 @@ const TransactionListItem: FC<Props> = ({ transaction, handleReRender }) => {
             Receive Book
           </Button>
         </Box>
+      )}
+      {editOpen && (
+        <TransactionEditDialog
+          open={editOpen}
+          handleOpen={handleEditOpen}
+          transaction={transaction}
+        />
       )}
       {deleteOpen && (
         <TransactionDeleteDialog
