@@ -14,18 +14,12 @@ import { Transaction } from "../types";
 import { TransactionDeleteDialog } from "./TransactionDeleteDialog";
 
 type Props = {
-  transaction: Transaction;
-  editOpen: boolean;
   handleEditOpen: () => void;
-  deleteOpen: boolean;
   handleDeleteOpen: () => void;
 };
 
 const IsolatedMenu: FC<Props> = ({
-  transaction,
-  editOpen,
   handleEditOpen,
-  deleteOpen,
   handleDeleteOpen,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -69,13 +63,6 @@ const IsolatedMenu: FC<Props> = ({
           <ListItemText>Delete</ListItemText>
         </MenuItem>
       </Menu>
-      {deleteOpen && (
-        <TransactionDeleteDialog
-          open={deleteOpen}
-          handleOpen={handleDeleteOpen}
-          transaction={transaction}
-        />
-      )}
     </>
   );
 };

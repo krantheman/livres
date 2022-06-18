@@ -10,14 +10,9 @@ const Transactions = () => {
     setSearch(event.currentTarget.value);
   };
 
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const handleEditDialogOpen = () => {
-    setEditDialogOpen(!editDialogOpen);
-  };
-
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const handleDeleteDialogOpen = () => {
-    setDeleteDialogOpen(!deleteDialogOpen);
+  const [dummy, setDummy] = useState(true);
+  const handleReRender = () => {
+    setDummy(!dummy);
   };
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -27,7 +22,7 @@ const Transactions = () => {
       .then((data) => {
         setTransactions(data.transactions);
       });
-  }, [editDialogOpen, deleteDialogOpen]);
+  }, [dummy]);
 
   const a11yProps = (index: number) => {
     return {
@@ -35,6 +30,7 @@ const Transactions = () => {
       "aria-controls": `simple-tabpanel-${index}`,
     };
   };
+
   const [tab, setTab] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -79,10 +75,7 @@ const Transactions = () => {
             <TransactionListItem
               key={transaction.id}
               transaction={transaction}
-              editOpen={editDialogOpen}
-              handleEditOpen={handleEditDialogOpen}
-              deleteOpen={deleteDialogOpen}
-              handleDeleteOpen={handleDeleteDialogOpen}
+              handleReRender={handleReRender}
             />
           ))}
       {tab === 1 &&
@@ -101,10 +94,7 @@ const Transactions = () => {
             <TransactionListItem
               key={transaction.id}
               transaction={transaction}
-              editOpen={editDialogOpen}
-              handleEditOpen={handleEditDialogOpen}
-              deleteOpen={deleteDialogOpen}
-              handleDeleteOpen={handleDeleteDialogOpen}
+              handleReRender={handleReRender}
             />
           ))}
     </PageLayout>

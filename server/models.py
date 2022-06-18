@@ -31,8 +31,6 @@ class Member(db.Model):
         'Transaction', cascade="all, delete", backref='member', lazy=True)
 
 
-# TODO: on delete cascade
-
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     borrow_date = db.Column(db.Date, nullable=False, default=datetime.today())

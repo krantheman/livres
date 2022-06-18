@@ -1,3 +1,4 @@
+from cmath import log
 from flask import Blueprint, jsonify, request
 from sqlalchemy import or_
 from sqlalchemy.orm import joinedload
@@ -142,7 +143,6 @@ def get_transactions():
     transactions = []
     transaction_list = Transaction.query.options(
         joinedload(Transaction.book), joinedload(Transaction.member)).all()
-
     for transaction in transaction_list:
         transaction_as_dict = transaction.__dict__
         del transaction_as_dict["_sa_instance_state"]
@@ -157,15 +157,19 @@ def update_transaction(id):
     if not request.json:
         return "No transaction data provided", 400
     transaction = Transaction.query.get(id)
-    transaction.borrow_date = request.json["borrow_date"]
-    transaction.return_date = request.json["return_date"]
-    transaction = transaction.__dict__.copy()
-    del transaction["_sa_instance_state"]
+    transaction.borrow_date = parser.parse(request.json["borrow_date"])
+    transaction.return_date = parser.parse(request.json["return_date"])
+    transaction_as_dict = row2dict(transaction)
+    if transaction.return_date:
+        member = Member.query.get(transaction.member_id)
+        member.debt -= calculate_debt(transaction.borrow_date.date())
+        book = Book.query.get(transaction.book_id)
+        book.stock += 1
     db.session.commit()
-    return {"transaction": transaction}
+    return {"transaction": transaction_as_dict}
 
 
-@transaction_blueprint.route("/transaction/<id>", methods=["DELETE"])
+@ transaction_blueprint.route("/transaction/<id>", methods=["DELETE"])
 def delete_transaction(id):
     transaction = Transaction.query.get(id)
     if not transaction:

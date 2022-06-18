@@ -10,7 +10,6 @@ export const calculateDebt = (transaction: Transaction) => {
     Math.abs((today.getTime() - borrowDate.getTime()) / oneDay)
   );
   if (days <= 30) return 100;
-  const debt = Math.round(100 + ((days - 30) / 7) * 100);
-  console.log(debt);
-  return debt;
+  const debt = 100 + ((days - 30) / 7) * 100;
+  return Math.round(debt);
 };

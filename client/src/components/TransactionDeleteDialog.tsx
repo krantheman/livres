@@ -23,7 +23,6 @@ export const TransactionDeleteDialog: FC<Props> = ({
 }) => {
   const snackbar = useSnackbar();
 
-  console.log(transaction.id);
 
   const handleDelete = () => {
     fetch(`/transaction/${transaction.id}`, {
