@@ -2,11 +2,9 @@ import AddIcon from "@mui/icons-material/Add";
 import ArticleIcon from "@mui/icons-material/Article";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CorporateFareIcon from "@mui/icons-material/CorporateFare";
-import InventoryIcon from "@mui/icons-material/Inventory";
 import LanguageIcon from "@mui/icons-material/Language";
 import { Box, Button, Paper, Rating, Stack, Typography } from "@mui/material";
 import { FC, useState } from "react";
-import bookImg from "../assets/book3.png";
 import { Book } from "../types";
 import { BookDialog } from "./BookDialog";
 
@@ -22,10 +20,12 @@ const BookListItem: FC<Props> = ({ book, forImport }) => {
   };
 
   return (
-    <Paper elevation={0} sx={{ px: 4, py: 3 }}>
+    <Paper
+      elevation={0}
+      sx={{ px: 4, py: 3, mb: 3, border: 1, borderColor: "lightgray" }}
+    >
       <Stack direction="row" spacing={3}>
-        <img src={bookImg} alt="Book" />
-        <Stack py={1} width="70%">
+        <Stack py={1} width="90%">
           <Typography variant="h6" sx={{ fontWeight: "bold" }} noWrap>
             {book.title}
           </Typography>
@@ -68,12 +68,9 @@ const BookListItem: FC<Props> = ({ book, forImport }) => {
               <b>Import</b>
             </Button>
           ) : (
-            <Stack direction="row" spacing={1} alignItems="center">
-              <InventoryIcon fontSize="large" color="info" />
-              <Typography sx={{ color: "gray", fontWeight: "bold" }}>
-                {book.stock === 1 ? "1 book" : `${book.stock} books`}
-              </Typography>
-            </Stack>
+            <Typography variant="h6" color="gray">
+              Stock: <b>{book.stock}</b>
+            </Typography>
           )}
         </Box>
       </Stack>

@@ -1,3 +1,4 @@
+import { Divider, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -41,7 +42,6 @@ export const MemberDeleteDialog: FC<Props> = ({ member, open, handleOpen }) => {
     "Email ID: ": member.email,
     "Phone number: ": member.phone_no,
     "Address: ": member.address,
-    "Debt: ": member.debt,
   };
 
   return (
@@ -49,6 +49,7 @@ export const MemberDeleteDialog: FC<Props> = ({ member, open, handleOpen }) => {
       open={open}
       onClose={handleOpen}
       TransitionComponent={Transition}
+      maxWidth="xs"
       fullWidth
     >
       <DialogTitle>
@@ -61,6 +62,10 @@ export const MemberDeleteDialog: FC<Props> = ({ member, open, handleOpen }) => {
             {(DialogContentObj as any)[key]}
           </DialogContentText>
         ))}
+        <Divider sx={{ my: 2 }} />
+        <Typography variant="h6">
+          <b>Debt: </b> {`Rs. ${member.debt}`}
+        </Typography>
       </DialogContent>
       <DialogActions sx={{ pb: 3, pr: 3 }}>
         <Button color="inherit" onClick={handleOpen} sx={{ mr: 2 }}>

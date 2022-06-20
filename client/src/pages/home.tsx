@@ -10,19 +10,19 @@ import {
   InputAdornment,
   Stack,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
+import { green, indigo, red, yellow } from "@mui/material/colors";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useEffect, useState } from "react";
-import { useSnackbar } from "../contexts/SnackbarContext";
-import { Book, Member, Transaction } from "../types";
-import returned from "../assets/returned.png";
 import borrowed from "../assets/borrowed.png";
 import overdue from "../assets/overdue.png";
+import returned from "../assets/returned.png";
 import InfoCard from "../components/InfoCard";
-import { green, red, yellow, grey } from "@mui/material/colors";
-import { GridColDef, DataGrid } from "@mui/x-data-grid";
+import { useSnackbar } from "../contexts/SnackbarContext";
+import { Book, Member, Transaction } from "../types";
 import { calculateDebt } from "../utils";
 
 const Home = () => {
@@ -34,6 +34,7 @@ const Home = () => {
   const [overdueTransactions, setOverdueTransactions] = useState<Transaction[]>(
     []
   );
+  const [loading, setLoading] = useState(true);
 
   const [member, setMember] = useState<Member>();
   const [memberInputValue, setMemberInputValue] = useState("");
@@ -69,6 +70,7 @@ const Home = () => {
     fetch("/transactions")
       .then((res) => res.json())
       .then((data) => {
+        setLoading(false);
         const totalTransactions = data.transactions.length;
         const dueTransactions = data.transactions.filter(
           (transaction: Transaction) => !transaction.return_date
@@ -85,8 +87,8 @@ const Home = () => {
           )
           .map((transaction: Transaction) => ({
             id: transaction.id,
-            member: transaction.member.name,
             book: transaction.book.title,
+            member: transaction.member.name,
             borrowDate: transaction.borrow_date.toString().substring(0, 16),
             amount: calculateDebt(transaction),
           }));
@@ -128,8 +130,8 @@ const Home = () => {
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "Transaction ID", width: 150 },
-    { field: "member", headerName: "Member", width: 200 },
     { field: "book", headerName: "Book", flex: 1 },
+    { field: "member", headerName: "Member", width: 200 },
     { field: "borrowDate", headerName: "Borrowed On", width: 200 },
     { field: "amount", headerName: "Amount Due", width: 150 },
   ];
@@ -167,7 +169,7 @@ const Home = () => {
         <Box sx={{ width: "65%" }}>
           <Stack>
             <Typography variant="h5" sx={{ fontWeight: "bold", mb: 3 }}>
-              Lend a Book
+              Issue a Book
             </Typography>
             <Autocomplete
               id="find-member"
@@ -203,14 +205,14 @@ const Home = () => {
                 />
               )}
             />
-            {member && (
-              <Stack sx={{ mb: 3, borderRadius: 1, p: 2, bgcolor: grey[100] }}>
-                <Typography noWrap>{member.name}</Typography>
-                <Typography color="gray" noWrap>
-                  {member.email}
-                </Typography>
-              </Stack>
-            )}
+            <Stack sx={{ mb: 3, borderRadius: 1, p: 2, bgcolor: indigo[50] }}>
+              <Typography noWrap sx={{ height: 24 }}>
+                {member ? member.name : " "}
+              </Typography>
+              <Typography color="gray" noWrap sx={{ height: 24 }}>
+                {member ? member.email : " "}
+              </Typography>
+            </Stack>
             <Autocomplete
               id="find-book"
               sx={{ mb: 3 }}
@@ -245,14 +247,14 @@ const Home = () => {
                 />
               )}
             />
-            {book && (
-              <Stack sx={{ mb: 3, borderRadius: 1, p: 2, bgcolor: "#f5f5f5" }}>
-                <Typography noWrap>{book.title}</Typography>
-                <Typography color="gray" noWrap>
-                  {book.authors}
-                </Typography>
-              </Stack>
-            )}
+            <Stack sx={{ mb: 3, borderRadius: 1, p: 2, bgcolor: indigo[50] }}>
+              <Typography noWrap sx={{ height: 24 }}>
+                {book ? book.title : " "}
+              </Typography>
+              <Typography color="gray" noWrap sx={{ height: 24 }}>
+                {book ? book.authors : " "}
+              </Typography>
+            </Stack>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
                 label="Date of lending"
@@ -289,7 +291,7 @@ const Home = () => {
         </Box>
       </Stack>
       <Typography variant="h5" sx={{ fontWeight: "bold", mt: 5, mb: 2 }}>
-        Overdue books
+        Overdue book list
       </Typography>
       <Box sx={{ height: 370 }}>
         <DataGrid
@@ -300,6 +302,7 @@ const Home = () => {
           disableSelectionOnClick
           disableColumnMenu
           autoHeight
+          loading={loading}
         />
       </Box>
     </Box>

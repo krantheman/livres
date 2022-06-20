@@ -128,10 +128,20 @@ export const TransactionEditDialog: FC<Props> = ({
         )}
       </DialogContent>
       <DialogActions sx={{ pb: 3, pr: 3 }}>
-        <Button color="inherit" onClick={handleOpen} sx={{ mr: 2 }}>
+        <Button
+          size="large"
+          color="inherit"
+          onClick={handleOpen}
+          sx={{ mr: 2 }}
+        >
           <b>Cancel</b>
         </Button>
-        <Button variant="contained" disableElevation onClick={handleEdit}>
+        <Button
+          size="large"
+          variant="contained"
+          disableElevation
+          onClick={handleEdit}
+        >
           <b>Update</b>
         </Button>
       </DialogActions>

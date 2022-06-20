@@ -1,14 +1,14 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 import { Box, IconButton, Stack } from "@mui/material";
+import { indigo, red } from "@mui/material/colors";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ChangeEvent, useEffect, useState } from "react";
+import { MemberDeleteDialog } from "../components/MemberDeleteDialog";
+import { MemberDialog } from "../components/MemberDialog";
 import PageLayout from "../components/PageLayout";
 import { Member } from "../types";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { MemberDialog } from "../components/MemberDialog";
-import { MemberDeleteDialog } from "../components/MemberDeleteDialog";
-import { blue, red } from "@mui/material/colors";
 
 const Members = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -16,6 +16,7 @@ const Members = () => {
     setAddDialogOpen(!addDialogOpen);
   };
 
+  const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState<Member[]>([]);
   const [rows, setRows] = useState<Member[]>([]);
 
@@ -60,6 +61,7 @@ const Members = () => {
   useEffect(() => {
     fetch("/members").then((res) =>
       res.json().then((data) => {
+        setLoading(false);
         setMembers(data.members);
         setRows(data.members);
       })
@@ -79,7 +81,7 @@ const Members = () => {
       renderCell: (cellValues) => (
         <Stack direction="row" spacing={4}>
           <IconButton
-            sx={{ color: blue[400] }}
+            sx={{ "&:hover": { color: indigo[500] } }}
             onClick={() => {
               handleEdit(cellValues);
             }}
@@ -87,7 +89,7 @@ const Members = () => {
             <EditIcon />
           </IconButton>
           <IconButton
-            sx={{ color: red[400] }}
+            sx={{ "&:hover": { color: red[500] } }}
             onClick={() => {
               handleDelete(cellValues);
             }}
@@ -119,6 +121,7 @@ const Members = () => {
           disableSelectionOnClick
           disableColumnMenu
           autoHeight
+          loading={loading}
         />
       </Box>
       {editDialogOpen && (

@@ -1,4 +1,4 @@
-import { Pagination } from "@mui/material";
+import { Box, CircularProgress, Pagination } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import BookListItem from "../components/BookListItem";
 import PageLayout from "../components/PageLayout";
@@ -43,15 +43,30 @@ const BooksImport = () => {
       searchLabel="Search for a book, author, isbn code or publisher"
       handleSearch={handleSearch}
     >
-      {books.map((book, id) => (
-        <BookListItem key={id} book={book} forImport />
-      ))}
-      <Pagination
-        count={200}
-        onChange={handlePage}
-        color="primary"
-        sx={{ mx: "auto", mt: 2 }}
-      />
+      {books.length === 0 ? (
+        <Box
+          sx={{
+            display: "flex",
+            height: 600,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress size={60} />
+        </Box>
+      ) : (
+        <>
+          {books.map((book, id) => (
+            <BookListItem key={id} book={book} forImport />
+          ))}
+          <Pagination
+            count={200}
+            onChange={handlePage}
+            color="primary"
+            sx={{ mx: "auto", mt: 2 }}
+          />
+        </>
+      )}
     </PageLayout>
   );
 };

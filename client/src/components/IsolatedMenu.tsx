@@ -1,27 +1,20 @@
-import {
-  IconButton,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
-import { blue, red } from "@mui/material/colors";
-import { FC, useState } from "react";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Transaction } from "../types";
-import { TransactionDeleteDialog } from "./TransactionDeleteDialog";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import {
+  IconButton, ListItemIcon,
+  ListItemText, Menu,
+  MenuItem
+} from "@mui/material";
+import { indigo, red } from "@mui/material/colors";
+import { FC, useState } from "react";
 
 type Props = {
   handleEditOpen: () => void;
   handleDeleteOpen: () => void;
 };
 
-const IsolatedMenu: FC<Props> = ({
-  handleEditOpen,
-  handleDeleteOpen,
-}) => {
+const IsolatedMenu: FC<Props> = ({ handleEditOpen, handleDeleteOpen }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -47,7 +40,7 @@ const IsolatedMenu: FC<Props> = ({
           }}
         >
           <ListItemIcon>
-            <EditIcon fontSize="small" sx={{ color: blue[400] }} />
+            <EditIcon fontSize="small" sx={{ color: indigo[500] }} />
           </ListItemIcon>
           <ListItemText>Edit</ListItemText>
         </MenuItem>
@@ -58,7 +51,7 @@ const IsolatedMenu: FC<Props> = ({
           }}
         >
           <ListItemIcon>
-            <DeleteIcon fontSize="small" sx={{ color: red[400] }} />
+            <DeleteIcon fontSize="small" sx={{ color: red[500] }} />
           </ListItemIcon>
           <ListItemText>Delete</ListItemText>
         </MenuItem>

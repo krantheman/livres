@@ -1,6 +1,6 @@
 import DoneIcon from "@mui/icons-material/Done";
 import { Box, Button, Divider, Paper, Stack, Typography } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { Transaction } from "../types";
 import { calculateDebt } from "../utils";
@@ -62,7 +62,7 @@ const TransactionListItem: FC<Props> = ({ transaction, handleReRender }) => {
     >
       <Stack direction="row">
         <Typography variant="h5" noWrap sx={{ width: "100%" }}>
-          <b>{`Transaction No.: ${transaction.id}`}</b>
+          <b>{`Transaction No: ${transaction.id}`}</b>
         </Typography>
         <IsolatedMenu
           handleEditOpen={handleEditOpen}
@@ -109,7 +109,7 @@ const TransactionListItem: FC<Props> = ({ transaction, handleReRender }) => {
             endIcon={<DoneIcon />}
             onClick={handleReceiveBook}
           >
-            Receive Book
+            Issue Book Return
           </Button>
         </Box>
       )}

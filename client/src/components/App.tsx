@@ -1,4 +1,5 @@
 import { Container } from "@mui/material";
+import { indigo } from "@mui/material/colors";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { SnackbarContextProvider } from "../contexts/SnackbarContext";
@@ -11,14 +12,14 @@ import NavBar from "./NavBar";
 import Toast from "./Toast";
 
 const theme = createTheme({
-  // palette: {
-  //   primary: {
-  //     main: "#7b2cbf",
-  //   },
-  //   secondary: {
-  //     main: "#ADFC92",
-  //   },
-  // },
+  palette: {
+    primary: {
+      main: indigo[700],
+    },
+    secondary: {
+      main: "#ADFC92",
+    },
+  },
   shape: {
     borderRadius: 8,
   },
@@ -34,8 +35,8 @@ const App = () => {
     <BrowserRouter>
       <SnackbarContextProvider>
         <ThemeProvider theme={theme}>
-          <NavBar />
           <Container>
+            <NavBar />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/books" element={<Books />} />

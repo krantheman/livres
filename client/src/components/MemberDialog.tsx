@@ -135,6 +135,7 @@ export const MemberDialog: FC<Props> = ({ open, handleOpen, member }) => {
       open={open}
       onClose={handleOpen}
       TransitionComponent={Transition}
+      maxWidth="xs"
       fullWidth
     >
       <DialogTitle sx={{ px: 4, pt: 4 }}>
@@ -191,10 +192,20 @@ export const MemberDialog: FC<Props> = ({ open, handleOpen, member }) => {
         />
       </DialogContent>
       <DialogActions sx={{ pb: 4, px: 4 }}>
-        <Button color="inherit" onClick={handleOpen} sx={{ mr: 2 }}>
+        <Button
+          size="large"
+          color="inherit"
+          onClick={handleOpen}
+          sx={{ mr: 2 }}
+        >
           <b>Cancel</b>
         </Button>
-        <Button variant="contained" disableElevation onClick={handleAdd}>
+        <Button
+          size="large"
+          variant="contained"
+          disableElevation
+          onClick={handleAdd}
+        >
           <b>{member ? "Update" : "Register"}</b>
         </Button>
       </DialogActions>

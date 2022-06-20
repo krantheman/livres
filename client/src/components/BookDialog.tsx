@@ -145,13 +145,19 @@ export const BookDialog: FC<Props> = ({ book, open, handleOpen }) => {
         />
       </DialogContent>
       <DialogActions sx={{ pb: 3, pr: 3 }}>
-        <Button color="inherit" onClick={handleOpen} sx={{ mr: 2 }}>
+        <Button
+          color="inherit"
+          size="large"
+          onClick={handleOpen}
+          sx={{ mr: 2 }}
+        >
           <b>Cancel</b>
         </Button>
         <Button
           variant="contained"
           disableElevation
           disabled={existingBook && existingBook.stock >= 50}
+          size="large"
           onClick={handleImport}
         >
           <b>Import</b>

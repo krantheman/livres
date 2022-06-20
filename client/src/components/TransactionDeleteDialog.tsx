@@ -89,10 +89,16 @@ export const TransactionDeleteDialog: FC<Props> = ({
         )}
       </DialogContent>
       <DialogActions sx={{ pb: 3, pr: 3 }}>
-        <Button color="inherit" onClick={handleOpen} sx={{ mr: 2 }}>
+        <Button
+          size="large"
+          color="inherit"
+          onClick={handleOpen}
+          sx={{ mr: 2 }}
+        >
           <b>Cancel</b>
         </Button>
         <Button
+          size="large"
           variant="contained"
           color="error"
           disableElevation
