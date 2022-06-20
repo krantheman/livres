@@ -3,6 +3,8 @@ import { ChangeEvent, useEffect, useState } from "react";
 import PageLayout from "../components/PageLayout";
 import TransactionListItem from "../components/TransactionListItem";
 import { Transaction } from "../types";
+import Lottie from "lottie-react";
+import noTransactionsAnimation from "../assets/no_transactions.json";
 
 const Transactions = () => {
   const [search, setSearch] = useState("");
@@ -15,12 +17,23 @@ const Transactions = () => {
     setDummy(!dummy);
   };
 
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  // Transactions
+  const [pending, setPending] = useState<Transaction[]>([]);
+  const [completed, setCompleted] = useState<Transaction[]>([]);
   useEffect(() => {
     fetch("/transactions")
       .then((res) => res.json())
       .then((data) => {
-        setTransactions(data.transactions);
+        setPending(
+          data.transactions.filter(
+            (transaction: Transaction) => !transaction.return_date
+          )
+        );
+        setCompleted(
+          data.transactions.filter(
+            (transaction: Transaction) => transaction.return_date
+          )
+        );
       });
   }, [dummy]);
 
@@ -59,17 +72,27 @@ const Transactions = () => {
           />
         </Tabs>
       </Box>
-      {tab === 0 &&
-        transactions
+      {tab === 0 && pending.length === 0 ? (
+        <Box mt={5}>
+          <Lottie
+            animationData={noTransactionsAnimation}
+            style={{ height: 400 }}
+          />
+          <Typography variant="h5" align="center">
+            You have no pending transactions.
+          </Typography>
+        </Box>
+      ) : (
+        tab === 0 &&
+        pending
           .filter(
             (transaction) =>
-              !transaction.return_date &&
-              (transaction.member.name
+              transaction.member.name
                 .toLowerCase()
                 .includes(search.toLowerCase()) ||
-                transaction.book.title
-                  .toLowerCase()
-                  .includes(search.toLowerCase()))
+              transaction.book.title
+                .toLowerCase()
+                .includes(search.toLowerCase())
           )
           .map((transaction) => (
             <TransactionListItem
@@ -77,18 +100,18 @@ const Transactions = () => {
               transaction={transaction}
               handleReRender={handleReRender}
             />
-          ))}
+          ))
+      )}
       {tab === 1 &&
-        transactions
+        completed
           .filter(
             (transaction) =>
-              transaction.return_date &&
-              (transaction.member.name
+              transaction.member.name
                 .toLowerCase()
                 .includes(search.toLowerCase()) ||
-                transaction.book.title
-                  .toLowerCase()
-                  .includes(search.toLowerCase()))
+              transaction.book.title
+                .toLowerCase()
+                .includes(search.toLowerCase())
           )
           .map((transaction) => (
             <TransactionListItem

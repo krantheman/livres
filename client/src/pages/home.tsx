@@ -10,7 +10,7 @@ import {
   InputAdornment,
   Stack,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import { green, indigo, red, yellow } from "@mui/material/colors";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";

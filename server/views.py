@@ -76,9 +76,16 @@ def add_member():
 @member_blueprint.route("/members")
 def get_members():
     members = []
-    member_list = Member.query.all()
+    member_list = Member.query.options(joinedload(Member.transactions)).all()
     for member in member_list:
+        if member.debt > 0:
+            debt = 0
+            for transaction in member.transactions:
+                if not transaction.return_date:
+                    debt += calculate_debt(transaction.borrow_date)
+            member.debt = debt
         member_as_dict = member.__dict__
+        del member_as_dict["transactions"]
         del member_as_dict["_sa_instance_state"]
         members.append(member_as_dict)
     return jsonify({"members": members})
@@ -129,7 +136,7 @@ def create_transaction():
     transaction_data["borrow_date"] = parser.parse(
         transaction_data["borrow_date"])
     member = Member.query.get(transaction_data["member_id"])
-    member.debt += calculate_debt(transaction_data["borrow_date"].date())
+    member.debt = 1
     book = Book.query.get(transaction_data["book_id"])
     book.stock -= 1
     new_transaction = Transaction(**transaction_data)
@@ -163,20 +170,15 @@ def update_transaction(id):
     new_borrow_date = parser.parse(request.json["borrow_date"])
     new_return_date = parser.parse(
         request.json["return_date"]) if request.json["return_date"] else None
-    old_borrow_date = transaction.borrow_date
     old_return_date = transaction.return_date
 
     if new_return_date:
         if not old_return_date:
             book.stock += 1
-            member.debt -= calculate_debt(old_borrow_date)
     else:
         if old_return_date:
-            member.debt += calculate_debt(new_borrow_date.date())
+            member.debt = 1
             book.stock -= 1
-        else:
-            member.debt += (calculate_debt(new_borrow_date.date()) -
-                            calculate_debt(old_borrow_date))
     transaction.return_date = new_return_date
     transaction.borrow_date = new_borrow_date
 
@@ -191,8 +193,6 @@ def delete_transaction(id):
     if not transaction:
         return "Transaction does not exist", 404
     if not transaction.return_date:
-        member = Member.query.get(transaction.member_id)
-        member.debt -= calculate_debt(transaction.borrow_date)
         book = Book.query.get(transaction.book_id)
         book.stock += 1
     db.session.delete(transaction)

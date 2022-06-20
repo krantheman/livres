@@ -68,8 +68,8 @@ const BookListItem: FC<Props> = ({ book, forImport }) => {
               <b>Import</b>
             </Button>
           ) : (
-            <Typography variant="h6" color="gray">
-              Stock: <b>{book.stock}</b>
+            <Typography color="gray">
+              STOCK: <b>{book.stock}</b>
             </Typography>
           )}
         </Box>
