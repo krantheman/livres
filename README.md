@@ -27,7 +27,7 @@ The application provides a user interface to the librarian who is supposed to ru
 
 ![Transactions](./gifs/transactions.gif)
 
-- Import from an [external API](https://frappe.io/api/method/frappe-library) into the user's sytem by searching for the book, author, isbn code or publisher and then selecting the number of books to be imported.
+- Importing books from an [external API](https://frappe.io/api/method/frappe-library) into the user's sytem by searching for the name, author, isbn code or publisher and then selecting the number of books to be imported.
 - The imported stock of books can be viewed, searched and managed through the application.
 
 ![Books](./gifs/books.gif)
@@ -42,12 +42,12 @@ _Icons by [max.Icons](https://www.flaticon.com/packs/borrow-book-2). Lottie by [
 
 ## Usage
 
-To run this application on your system, open a terminal and:-
+To run this application on your system, open a terminal and
 
 - Clone this repository by running `git clone https://github.com/krantheman/livres`.
 - Install python dependencies by running `pip install -r requirements.txt`
 - Export flask app variable with `export FLASK_APP=server`
-- And then start the server with `flask run`
+- Run server with `flask run`
 - Next, open a new terminal instance and `cd client`.
 - Install packages by running `npm install`.
 - Start server with `npm start`.
