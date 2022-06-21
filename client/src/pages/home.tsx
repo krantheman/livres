@@ -257,7 +257,7 @@ const Home = () => {
             </Stack>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
-                label="Date of lending"
+                label="Date of borrowing"
                 value={date}
                 onChange={(newValue) => {
                   setDate(newValue);
